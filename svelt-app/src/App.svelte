@@ -1,20 +1,20 @@
 <script>
-	import { Router, Route } from "svelte-routing";	
-	import { Link } from "svelte-routing";
-	import Home from './routes/Home.svelte'
-	import Conjugator from './routes/Conjugator.svelte'
+  import { Router, Route } from "svelte-routing";
+  import { Link } from "svelte-routing";
+  import Home from "./routes/Home.svelte";
+  import Conjugator from "./routes/conjugator/Conjugator.svelte";
 </script>
 
+<style>
+  .route-container {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
 <Router>
-  <nav>
-    <Link to='/'>Home</Link>
-    <Link to='conjugator'>Conjugator</Link>
-  </nav>
-  <div>
+  <div class="route-container">
     <Route path="/conjugator" component={Conjugator} />
     <Route path="/" component={Home} />
   </div>
 </Router>
-
-<style>
-</style>
