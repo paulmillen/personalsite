@@ -53,7 +53,7 @@ export const verbTable = {
         'she wil be': 'elle sera',
         'we will be (informal)': 'on sera',
         'we will be': 'nous serons',
-        'you will be': 'vous serez',
+        'you will be (pl)': 'vous serez',
         'they will be (mas)': 'ils seront',
         'they will be (fem)': 'elles seront'
       }
@@ -105,15 +105,15 @@ export const verbTable = {
     {
       tense: 'futur simple',
       conjugations: {
-        'I will be': 'je aurai',
-        'you will be': 'tu auras',
-        'he will be': 'il aura',
-        'she wil be': 'elle aura',
-        'we will be (informal)': 'on aura',
-        'we will be': 'nous aurons',
-        'you will be': 'vous aurez',
-        'they will be (mas)': 'ils auront',
-        'they will be (fem)': 'elles auront'
+        'I will have': 'je aurai',
+        'you will have': 'tu auras',
+        'he will have': 'il aura',
+        'she wil have': 'elle aura',
+        'we will have (informal)': 'on aura',
+        'we will have': 'nous aurons',
+        'you will have (pl)': 'vous aurez',
+        'they will have (mas)': 'ils auront',
+        'they will have (fem)': 'elles auront'
       }
     }
   ]

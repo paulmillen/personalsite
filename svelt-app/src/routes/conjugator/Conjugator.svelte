@@ -4,6 +4,8 @@
   import { verbTable, availableTenses } from "./data.js";
 
   let translationData = {};
+  let value;
+  let isAnswerCorrect = null;
 
   onMount(() => {
     setTranslationData();
@@ -30,7 +32,8 @@
 
     return {
       tense: tenseBlock.tense,
-      conjugation: { [randomEntry[0]]: randomEntry[1] }
+      en: randomEntry[0],
+      fr: randomEntry[1]
     };
   };
 
@@ -39,6 +42,17 @@
     const verb = getRandomVerb();
     const tenseBlock = getTenseBlock(tense, verb);
     translationData = getTranslationData(tenseBlock);
+  };
+
+  const getNextQuestion = () => {
+    setTranslationData();
+    isAnswerCorrect = null;
+  };
+
+  const setIsAnswerCorrect = () => {
+    if (value) {
+      isAnswerCorrect = value === translationData.fr;
+    }
   };
 </script>
 
@@ -55,9 +69,17 @@
 </style>
 
 <div class="container">
-  verb
   <h1>Conjugator</h1>
   <span>Translate!</span>
-  <button on:click={setTranslationData} />
-  <p>{JSON.stringify(translationData)}</p>
+  <p>{`tense: ${translationData.tense}`}</p>
+  <h1>{translationData.en}</h1>
+  <input bind:value />
+  <button on:click={setIsAnswerCorrect}>submit!</button>
+  {#if isAnswerCorrect !== null && isAnswerCorrect}
+    <span>Correct!</span>
+  {:else if isAnswerCorrect !== null}
+    <span>Wrong</span>
+  {/if}
+  <br />
+  <button on:click={getNextQuestion}>Another!</button>
 </div>
