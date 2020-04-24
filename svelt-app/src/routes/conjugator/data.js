@@ -12,7 +12,7 @@ export const verbTable = {
         'we are (informal)': 'on est',
         'we are': 'nous sommes',
         'you are (pl)': 'vous êtes',
-        'they are (mas)': 'ils sont',
+        'they are (masc)': 'ils sont',
         'they are (fem)': 'elles sont'
       }
     },
@@ -26,7 +26,7 @@ export const verbTable = {
         'we were (informal)': 'on a été',
         'we were': 'nous avons été',
         'you were (pl)': 'vous avez été',
-        'they were (mas)': 'ils ont été',
+        'they were (masc)': 'ils ont été',
         'they were (fem)': 'elles ont été'
       }
     },
@@ -40,7 +40,7 @@ export const verbTable = {
         'we were (informal)': 'on était',
         'we were': 'nous étions',
         'you were (pl)': 'vous étiez',
-        'they were (mas)': 'ils étaient',
+        'they were (masc)': 'ils étaient',
         'they were (fem)': 'elles étaient'
       }
     },
@@ -50,11 +50,11 @@ export const verbTable = {
         'I will be': 'je serai',
         'you will be': 'tu seras',
         'he will be': 'il sera',
-        'she wil be': 'elle sera',
+        'she willbe': 'elle sera',
         'we will be (informal)': 'on sera',
         'we will be': 'nous serons',
         'you will be (pl)': 'vous serez',
-        'they will be (mas)': 'ils seront',
+        'they will be (masc)': 'ils seront',
         'they will be (fem)': 'elles seront'
       }
     }
@@ -70,7 +70,7 @@ export const verbTable = {
         'we have (informal)': 'on a',
         'we have': 'nous avons',
         'you have (pl)': 'vous avez',
-        'they have (mas)': 'ils ont',
+        'they have (masc)': 'ils ont',
         'they have (fem)': 'elles ont'
       }
     },
@@ -84,7 +84,7 @@ export const verbTable = {
         'we had (informal)': 'on a eu',
         'we had': 'nous avons eu',
         'you had (pl)': 'vous avez eu',
-        'they had (mas)': 'ils ont eu',
+        'they had (masc)': 'ils ont eu',
         'they had (fem)': 'elles ont eu'
       }
     },
@@ -98,7 +98,7 @@ export const verbTable = {
         'we had (informal)': 'on avait',
         'we had': 'nous avions',
         'you had (pl)': 'vous aviez',
-        'they had (mas)': 'ils avaient',
+        'they had (masc)': 'ils avaient',
         'they had (fem)': 'elles avaient'
       }
     },
@@ -108,11 +108,11 @@ export const verbTable = {
         'I will have': 'je aurai',
         'you will have': 'tu auras',
         'he will have': 'il aura',
-        'she wil have': 'elle aura',
+        'she willhave': 'elle aura',
         'we will have (informal)': 'on aura',
         'we will have': 'nous aurons',
         'you will have (pl)': 'vous aurez',
-        'they will have (mas)': 'ils auront',
+        'they will have (masc)': 'ils auront',
         'they will have (fem)': 'elles auront'
       }
     }
