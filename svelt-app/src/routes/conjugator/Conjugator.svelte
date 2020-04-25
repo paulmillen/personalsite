@@ -7,7 +7,7 @@
   let translationData = {};
   let value = "";
   let isAnswerCorrect = null;
-  let showPopup = false;
+  let isPopupVisible = false;
   let positionX;
   let positionY;
 
@@ -61,16 +61,14 @@
     }
   };
 
-  const toggleTranslationTextLang = () => {
-    translationTextLang = translationTextLang === "en" ? "fr" : "en";
-  };
-
-  const populateMouseCoords = event => {
+  const showPopup = event => {
+    isPopupVisible = true;
     positionX = event.clientX;
     positionY = event.clientY;
   };
 
-  const clearMouseCoords = () => {
+  const hidePopup = () => {
+    isPopupVisible = false;
     positionX = null;
     positionY = null;
   };
@@ -79,10 +77,16 @@
 <style>
   h1 {
     margin: 0;
+    font-size: 40px;
+  }
+
+  p {
+    font-size: 20px;
+    margin: 10px 0 10px 0;
   }
 
   form {
-    margin: 20px 0 20px 0;
+    margin: 15px 0 10px 0;
     text-align: center;
   }
 
@@ -151,19 +155,19 @@
 </svelte:head>
 <div class="container">
   <div class="inner-container">
-    <h1>Translate!</h1>
+    <h1>Traduis!</h1>
     <p>{`tense: ${translationData.tense}`}</p>
     <div class="translation-text-container">
       <h1>{translationData.en}</h1>
       <img
-        on:mouseenter={populateMouseCoords}
-        on:mouseleave={clearMouseCoords}
+        on:click={showPopup}
+        on:mouseleave={hidePopup}
         class="flag-img"
         alt="french flag"
         src="assets/france-flag-icon.png" />
     </div>
     <form>
-      <input bind:value />
+      <input on:keydown={() => (isAnswerCorrect = null)} bind:value />
       <button class="check-button" on:click|preventDefault={setIsAnswerCorrect}>
         check
       </button>
@@ -172,14 +176,14 @@
       {#if isAnswerCorrect}
         <span>Correct!</span>
       {:else}
-        <span>Wrong</span>
+        <span>Wrong (click the flag to reveal)</span>
       {/if}
     {:else}
       <span style="color:#419ae9">result</span>
     {/if}
     <button class="next-button" on:click={getNextQuestion}>Another!</button>
   </div>
-  {#if positionX || positionY}
+  {#if positionX && (positionY && showPopup)}
     <Popup {positionX} {positionY} text={translationData.fr} />
   {/if}
 </div>

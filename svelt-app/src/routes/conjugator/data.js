@@ -105,7 +105,7 @@ export const verbTable = {
     {
       tense: 'futur simple',
       conjugations: {
-        'I will have': 'je aurai',
+        'I will have': "j'aurai",
         'you will have': 'tu auras',
         'he will have': 'il aura',
         'she will have': 'elle aura',
