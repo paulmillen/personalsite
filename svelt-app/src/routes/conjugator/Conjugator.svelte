@@ -2,11 +2,14 @@
   import { onMount } from "svelte";
   import { getRandomItemFromArray } from "./utils.js";
   import { verbTable, availableTenses } from "./data.js";
+  import Popup from "./components/Popup.svelte";
 
   let translationData = {};
   let value = "";
   let isAnswerCorrect = null;
-  let translationTextLang = "en";
+  let showPopup = false;
+  let positionX;
+  let positionY;
 
   onMount(() => {
     setTranslationData();
@@ -61,6 +64,16 @@
   const toggleTranslationTextLang = () => {
     translationTextLang = translationTextLang === "en" ? "fr" : "en";
   };
+
+  const populateMouseCoords = event => {
+    positionX = event.clientX;
+    positionY = event.clientY;
+  };
+
+  const clearMouseCoords = () => {
+    positionX = null;
+    positionY = null;
+  };
 </script>
 
 <style>
@@ -114,6 +127,7 @@
   }
 
   .flag-img {
+    cursor: pointer;
     margin: 8px;
     height: 20px;
     width: auto;
@@ -140,20 +154,13 @@
     <h1>Translate!</h1>
     <p>{`tense: ${translationData.tense}`}</p>
     <div class="translation-text-container">
-      <h1>{translationData[translationTextLang]}</h1>
-      {#if translationTextLang === 'en'}
-        <img
-          on:click={toggleTranslationTextLang}
-          class="flag-img"
-          alt="french flag"
-          src="assets/france-flag-icon.png" />
-      {:else}
-        <img
-          on:click={toggleTranslationTextLang}
-          class="flag-img"
-          alt="uk flag"
-          src="assets/united-kingdom-flag-icon.png" />
-      {/if}
+      <h1>{translationData.en}</h1>
+      <img
+        on:mouseenter={populateMouseCoords}
+        on:mouseleave={clearMouseCoords}
+        class="flag-img"
+        alt="french flag"
+        src="assets/france-flag-icon.png" />
     </div>
     <form>
       <input bind:value />
@@ -172,4 +179,7 @@
     {/if}
     <button class="next-button" on:click={getNextQuestion}>Another!</button>
   </div>
+  {#if positionX || positionY}
+    <Popup {positionX} {positionY} text={translationData.fr} />
+  {/if}
 </div>
