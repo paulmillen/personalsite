@@ -4,8 +4,9 @@
   import { verbTable, availableTenses } from "./data.js";
 
   let translationData = {};
-  let value;
+  let value = "";
   let isAnswerCorrect = null;
+  let translationTextLang = "en";
 
   onMount(() => {
     setTranslationData();
@@ -48,12 +49,17 @@
     setTranslationData();
     isAnswerCorrect = null;
     value = "";
+    translationTextLang = "en";
   };
 
   const setIsAnswerCorrect = () => {
     if (value) {
       isAnswerCorrect = value === translationData.fr;
     }
+  };
+
+  const toggleTranslationTextLang = () => {
+    translationTextLang = translationTextLang === "en" ? "fr" : "en";
   };
 </script>
 
@@ -69,7 +75,6 @@
 
   input {
     height: 50px;
-    width: 200px;
     font-size: 20px;
   }
 
@@ -99,8 +104,19 @@
     display: flex;
     margin: auto;
     max-width: 1020px;
+    min-width: 400px;
     flex-direction: column;
     background-color: #419ae9;
+  }
+
+  .translation-text-container {
+    display: flex;
+  }
+
+  .flag-img {
+    margin: 8px;
+    height: 20px;
+    width: auto;
   }
 
   .check-button {
@@ -123,19 +139,37 @@
   <div class="inner-container">
     <h1>Translate!</h1>
     <p>{`tense: ${translationData.tense}`}</p>
-    <h1>{translationData.en}</h1>
+    <div class="translation-text-container">
+      <h1>{translationData[translationTextLang]}</h1>
+      {#if translationTextLang === 'en'}
+        <img
+          on:click={toggleTranslationTextLang}
+          class="flag-img"
+          alt="french flag"
+          src="assets/france-flag-icon.png" />
+      {:else}
+        <img
+          on:click={toggleTranslationTextLang}
+          class="flag-img"
+          alt="uk flag"
+          src="assets/united-kingdom-flag-icon.png" />
+      {/if}
+    </div>
     <form>
       <input bind:value />
       <button class="check-button" on:click|preventDefault={setIsAnswerCorrect}>
         check
       </button>
     </form>
-    {#if isAnswerCorrect !== null && isAnswerCorrect}
-      <span>Correct!</span>
-    {:else if isAnswerCorrect !== null}
-      <span>Wrong</span>
+    {#if isAnswerCorrect !== null}
+      {#if isAnswerCorrect}
+        <span>Correct!</span>
+      {:else}
+        <span>Wrong</span>
+      {/if}
+    {:else}
+      <span style="color:#419ae9">result</span>
     {/if}
-    <br />
     <button class="next-button" on:click={getNextQuestion}>Another!</button>
   </div>
 </div>
