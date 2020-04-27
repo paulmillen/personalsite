@@ -86,6 +86,8 @@
   }
 
   form {
+    display: flex;
+    justify-content: space-between;
     margin: 15px 0 10px 0;
     text-align: center;
   }
@@ -120,8 +122,8 @@
   .inner-container {
     display: flex;
     margin: auto;
-    max-width: 1020px;
-    min-width: 400px;
+    max-width: 440px;
+    min-width: 440px;
     flex-direction: column;
     background-color: #419ae9;
   }
@@ -195,9 +197,9 @@
       <h1 class="header-text">
         {#if isAnswerCorrect !== null}
           {#if isAnswerCorrect}
-            <span>Correct!</span>
+            <span style="color:#ffEA00">Correct!</span>
           {:else}
-            <span>Wrong!</span>
+            <span>Non!</span>
           {/if}
         {:else}
           <span>Traduis!</span>

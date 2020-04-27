@@ -116,5 +116,181 @@ export const verbTable = {
         'they will have (fem)': 'elles auront'
       }
     }
+  ],
+  'faire': [
+    {
+      tense: 'présent',
+      conjugations: {
+        'I do': 'je fais',
+        'you do': 'tu fais',
+        'he does': 'il fait',
+        'she does': 'elle fait',
+        'we do (informal)': 'on fait',
+        'we do': 'nous faisons',
+        'you do (pl)': 'vous faites',
+        'they do (masc)': 'ils font',
+        'they do (fem)': 'elles font'
+      }
+    },
+    {
+      tense: 'passé composé',
+      conjugations: {
+        'I did': "j'ai fait",
+        'you did': 'tu as fait',
+        'he did': 'il a fait',
+        'she did': 'elle a fait',
+        'we did (informal)': 'on a fait',
+        'we did': 'nous avons fait',
+        'you did (pl)': 'vous avez fait',
+        'they did (masc)': 'ils ont fait',
+        'they did (fem)': 'elles ont fait'
+      }
+    },
+    {
+      tense: 'imparfait',
+      conjugations: {
+        'I did': 'je faisais',
+        'you did': 'tu faisais',
+        'he did': 'il faisait',
+        'she did': 'elle faisait',
+        'we did (informal)': 'on faisait',
+        'we did': 'nous faisions',
+        'you did (pl)': 'vous faisiez',
+        'they did (masc)': 'ils faisaient',
+        'they did (fem)': 'elles faisaient'
+      }
+    },
+    {
+      tense: 'futur simple',
+      conjugations: {
+        'I will do': "je ferais",
+        'you will do': 'tu feras',
+        'he will do': 'il fera',
+        'she was': 'elle fera',
+        'we will do (informal)': 'on fera',
+        'we will do': 'nous ferons',
+        'you will do (pl)': 'vous ferez',
+        'they will do (masc)': 'ils feront',
+        'they will do (fem)': 'elles feront'
+      }
+    },
+  ],
+  'aller': [
+    {
+      tense: 'présent',
+      conjugations: {
+        'I go': 'je vais',
+        'you go': 'tu vas',
+        'he goes': 'il va',
+        'she goes': 'elle va',
+        'we go (informal)': 'on va',
+        'we go': 'nous allons',
+        'you go (pl)': 'vous allez',
+        'they go (masc)': 'ils vont',
+        'they go (fem)': 'elles vont'
+      }
+    },
+    {
+      tense: 'passé composé',
+      conjugations: {
+        'I went (masc)': "je suis allé",
+        'I went (fem)': "je suis allée",
+        'you went (masc)': 'tu es allé',
+        'you went (fem)': 'tu es allée',
+        'he went': 'il est allé',
+        'she went': 'elle est allée',
+        'we went (informal)': 'on est allé',
+        'we went': 'nous sommes allés',
+        'you went (pl)': 'vous êtes allés',
+        'they went (masc)': 'ils sont allés',
+        'they went (fem)': 'elles sont allées'
+      }
+    },
+    {
+      tense: 'imparfait',
+      conjugations: {
+        'I went': "j'allais",
+        'you went': 'tu allais',
+        'he went': 'il allait',
+        'she went': 'elle allait',
+        'we went (informal)': 'on allait',
+        'we went': 'nous allions',
+        'you went (pl)': 'vous alliez',
+        'they went (masc)': 'ils allaient',
+        'they went (fem)': 'elles allaient'
+      }
+    },
+    {
+      tense: 'futur simple',
+      conjugations: {
+        'I will go': "j'irais",
+        'you will go': 'tu iras',
+        'he will go': 'il ira',
+        'she was': 'elle ira',
+        'we will go (informal)': 'on ira',
+        'we will go': 'nous irons',
+        'you will go (pl)': 'vous irez',
+        'they will go (masc)': 'ils iront',
+        'they will go (fem)': 'elles iront'
+      }
+    },
+  ],
+  'pouvoir': [
+    {
+      tense: 'présent',
+      conjugations: {
+        'I can': 'je peux',
+        'you can': 'tu peux',
+        'he can': 'il peut',
+        'she can': 'elle peut',
+        'we can (informal)': 'on peut',
+        'we can': 'nous pouvons',
+        'you can (pl)': 'vous pouvez',
+        'they can (masc)': 'ils peuvent',
+        'they can (fem)': 'elles peuvent'
+      }
+    },
+    {
+      tense: 'passé composé',
+      conjugations: {
+        'I could': "j'ai pu",
+        'you could': 'tu as pu',
+        'he could': 'il a pu',
+        'she could': 'elle a pue',
+        'we could (informal)': 'on a pu',
+        'we could': 'nous avons pu',
+        'you could (pl)': 'vous avez pu',
+        'they could (masc)': 'ils ont pu',
+        'they could (fem)': 'elles ont pu'
+      }
+    },
+    {
+      tense: 'imparfait',
+      conjugations: {
+        'I could': "je pouvais",
+        'you could': 'tu pouvais',
+        'he could': 'il pouvait',
+        'she could': 'elle pouvait',
+        'we could (informal)': 'on pouvait',
+        'we could': 'nous pouvions',
+        'you could (pl)': 'vous pouviez',
+        'they could (masc)': 'ils pouvaient',
+        'they could (fem)': 'elles pouvaient'
+      }
+    },
+    {
+      tense: 'futur simple',
+      conjugations: {
+        'I will go': "je pourrais",
+        'you will go': 'tu pourras',
+        'he will go': 'il pourra',
+        'she was': 'elle pourra',
+        'we will go (informal)': 'on pourra',
+        'we will go': 'nous pourrons',
+        'you will go (pl)': 'vous pourrez',
+        'they will go (masc)': 'ils pourront',
+        'they will go (fem)': 'elles pourront'
+      }
+    },
   ]
 }
