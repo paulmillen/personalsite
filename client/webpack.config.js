@@ -19,7 +19,7 @@ module.exports = {
 		mainFields: ['svelte', 'browser', 'module', 'main']
 	},
 	output: {
-		path: __dirname + '/public',
+		path: __dirname + '/public/build',
 		filename: '[name].js',
 		chunkFilename: '[name].[id].js'
 	},
@@ -34,7 +34,7 @@ module.exports = {
 						hotReload: true
 					}
 				}
-            },
+			},
 			{
 				test: /\.css$/,
 				use: [
@@ -54,5 +54,5 @@ module.exports = {
 			filename: '[name].css'
 		})
 	],
-	devtool: prod ? false: 'source-map'
+	devtool: prod ? false : 'source-map'
 };
