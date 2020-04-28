@@ -1,64 +1,25 @@
 <script>
   import { onMount } from "svelte";
-  import { getRandomItemFromArray } from "./utils.js";
   import { verbTable, availableTenses } from "./data.js";
+  import { getTranslationData } from "./dataHelpers.js";
   import Popup from "./components/Popup.svelte";
+  import Whale from "./components/Whale.svelte";
 
   let translationData = {};
   let value = "";
   let isAnswerCorrect = null;
   let isPopupVisible = false;
-  let positionX;
-  let positionY;
+  let positionX = 0;
+  let positionY = 0;
 
   onMount(() => {
-    setTranslationData();
+    translationData = getTranslationData(availableTenses, verbTable);
   });
 
-  const getRandomTense = () => {
-    return getRandomItemFromArray(availableTenses);
-  };
-
-  const getRandomVerb = () => {
-    const verbs = Object.keys(verbTable);
-    return getRandomItemFromArray(verbs);
-  };
-
-  const getTenseBlock = (desiredTense, verb) => {
-    const verbBlock = verbTable[verb];
-    return verbBlock.find(block => block.tense === desiredTense);
-  };
-
-  const getTranslationData = tenseBlock => {
-    const conjugationBlock = tenseBlock.conjugations;
-    const conjugations = Object.entries(conjugationBlock);
-    const randomEntry = getRandomItemFromArray(conjugations);
-
-    return {
-      tense: tenseBlock.tense,
-      en: randomEntry[0],
-      fr: randomEntry[1]
-    };
-  };
-
-  const setTranslationData = () => {
-    const tense = getRandomTense();
-    const verb = getRandomVerb();
-    const tenseBlock = getTenseBlock(tense, verb);
-    translationData = getTranslationData(tenseBlock);
-  };
-
-  const getNextQuestion = () => {
-    setTranslationData();
+  const getNextTranslation = () => {
+    translationData = getTranslationData(availableTenses, verbTable);
     isAnswerCorrect = null;
     value = "";
-    translationTextLang = "en";
-  };
-
-  const setIsAnswerCorrect = () => {
-    if (value) {
-      isAnswerCorrect = value === translationData.fr;
-    }
   };
 
   const showPopup = event => {
@@ -109,6 +70,10 @@
     background-color: #0f4c81;
   }
 
+  button:disabled {
+    color: grey;
+  }
+
   .container {
     font-family: "Quicksand";
     color: #fff;
@@ -121,47 +86,11 @@
 
   .inner-container {
     display: flex;
-    margin: auto;
-    max-width: 440px;
-    min-width: 440px;
     flex-direction: column;
+    margin: auto;
+    min-width: 440px;
+    max-width: 440px;
     background-color: #419ae9;
-  }
-
-  .header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .header-text {
-    position: relative;
-    color: #fff;
-    text-align: center;
-    min-width: 150px;
-    background: #0f4c81;
-    border-radius: 15px;
-    padding: 20px;
-  }
-
-  .header-text:after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 60%;
-    width: 0;
-    height: 0;
-    border: 15px solid transparent;
-    border-left-color: #0f4c81;
-    border-right: 0;
-    border-bottom: 0;
-    margin-top: -2.5px;
-    margin-right: -15px;
-  }
-
-  .whale-img {
-    height: 150px;
-    width: auto;
   }
 
   .translation-text-container {
@@ -193,20 +122,7 @@
 </svelte:head>
 <div class="container">
   <div class="inner-container">
-    <div class="header-container">
-      <h1 class="header-text">
-        {#if isAnswerCorrect !== null}
-          {#if isAnswerCorrect}
-            <span style="color:#ffEA00">Correct!</span>
-          {:else}
-            <span>Non!</span>
-          {/if}
-        {:else}
-          <span>Traduis!</span>
-        {/if}
-      </h1>
-      <img alt="whale" src="/assets/whale.png" class="whale-img" />
-    </div>
+    <Whale {isAnswerCorrect} />
     <p>{`tense: ${translationData.tense}`}</p>
     <div class="translation-text-container">
       <h1>{translationData.en}</h1>
@@ -218,14 +134,20 @@
         src="assets/france-flag-icon.png" />
     </div>
     <form>
-      <input on:keydown={() => (isAnswerCorrect = null)} bind:value />
-      <button class="check-button" on:click|preventDefault={setIsAnswerCorrect}>
+      <input
+        on:keydown={() => (isAnswerCorrect = null)}
+        bind:value
+        placeholder="translation" />
+      <button
+        class="check-button"
+        disabled={value === ''}
+        on:click|preventDefault={() => (isAnswerCorrect = value === translationData.fr)}>
         check
       </button>
     </form>
-    <button class="next-button" on:click={getNextQuestion}>Another!</button>
+    <button class="next-button" on:click={getNextTranslation}>Another!</button>
   </div>
-  {#if positionX && (positionY && showPopup)}
+  {#if positionX && positionY && showPopup}
     <Popup {positionX} {positionY} text={translationData.fr} />
   {/if}
 </div>
