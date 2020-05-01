@@ -1,4 +1,5 @@
 <script>
+  import { fade } from "svelte/transition";
   export let isAnswerCorrect;
 </script>
 
@@ -44,12 +45,12 @@
   <h1 class="header-text">
     {#if isAnswerCorrect !== null}
       {#if isAnswerCorrect}
-        <span style="color:#ffEA00">Correct!</span>
+        <span in:fade={{ duration: 600 }} style="color:#ffEA00">Correct!</span>
       {:else}
-        <span>Non!</span>
+        <span in:fade={{ duration: 600 }}>Non!</span>
       {/if}
     {:else}
-      <span>Traduis!</span>
+      <span in:fade={{ duration: 300 }}>Traduis!</span>
     {/if}
   </h1>
   <img alt="whale" src="/assets/whale.png" class="whale-img" />

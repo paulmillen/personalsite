@@ -1,10 +1,10 @@
-export const availableTenses = ['présent', 'passé composé', 'imparfait', 'futur simple']
+available_tenses = ['présent', 'passé composé', 'imparfait', 'futur simple']
 
-export const verbTable = {
+verb_dictionary = {
   'être': [
     {
-      tense: 'présent',
-      conjugations: {
+      'tense': 'présent',
+      'conjugations': {
         'I am': 'je suis',
         'you are': 'tu es',
         'he is': 'il est',
@@ -17,8 +17,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'passé composé',
-      conjugations: {
+      'tense': 'passé composé',
+      'conjugations': {
         'I was': "j'ai été",
         'you were': 'tu as été',
         'he was': 'il a été',
@@ -31,8 +31,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'imparfait',
-      conjugations: {
+      'tense': 'imparfait',
+      'conjugations': {
         'I was': "j'étais",
         'you were': 'tu étais',
         'he was': 'il était',
@@ -45,8 +45,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'futur simple',
-      conjugations: {
+      'tense': 'futur simple',
+      'conjugations': {
         'I will be': 'je serai',
         'you will be': 'tu seras',
         'he will be': 'il sera',
@@ -61,8 +61,8 @@ export const verbTable = {
   ],
   'avoir': [
     {
-      tense: 'présent',
-      conjugations: {
+      'tense': 'présent',
+      'conjugations': {
         'I have': "j'ai",
         'you have': 'tu as',
         'he has': 'il a',
@@ -75,8 +75,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'passé composé',
-      conjugations: {
+      'tense': 'passé composé',
+      'conjugations': {
         'I had': "j'ai eu",
         'you had': 'tu as eu',
         'he had': 'il a eu',
@@ -89,8 +89,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'imparfait',
-      conjugations: {
+      'tense': 'imparfait',
+      'conjugations': {
         'I had': "j'avais",
         'you had': 'tu avais',
         'he had': 'il avait',
@@ -103,8 +103,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'futur simple',
-      conjugations: {
+      'tense': 'futur simple',
+      'conjugations': {
         'I will have': "j'aurai",
         'you will have': 'tu auras',
         'he will have': 'il aura',
@@ -119,8 +119,8 @@ export const verbTable = {
   ],
   'faire': [
     {
-      tense: 'présent',
-      conjugations: {
+      'tense': 'présent',
+      'conjugations': {
         'I do': 'je fais',
         'you do': 'tu fais',
         'he does': 'il fait',
@@ -133,8 +133,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'passé composé',
-      conjugations: {
+      'tense': 'passé composé',
+      'conjugations': {
         'I did': "j'ai fait",
         'you did': 'tu as fait',
         'he did': 'il a fait',
@@ -147,8 +147,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'imparfait',
-      conjugations: {
+      'tense': 'imparfait',
+      'conjugations': {
         'I did': 'je faisais',
         'you did': 'tu faisais',
         'he did': 'il faisait',
@@ -161,8 +161,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'futur simple',
-      conjugations: {
+      'tense': 'futur simple',
+      'conjugations': {
         'I will do': "je ferais",
         'you will do': 'tu feras',
         'he will do': 'il fera',
@@ -177,8 +177,8 @@ export const verbTable = {
   ],
   'aller': [
     {
-      tense: 'présent',
-      conjugations: {
+      'tense': 'présent',
+      'conjugations': {
         'I go': 'je vais',
         'you go': 'tu vas',
         'he goes': 'il va',
@@ -191,8 +191,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'passé composé',
-      conjugations: {
+      'tense': 'passé composé',
+      'conjugations': {
         'I went (masc)': "je suis allé",
         'I went (fem)': "je suis allée",
         'you went (masc)': 'tu es allé',
@@ -207,8 +207,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'imparfait',
-      conjugations: {
+      'tense': 'imparfait',
+      'conjugations': {
         'I went': "j'allais",
         'you went': 'tu allais',
         'he went': 'il allait',
@@ -221,8 +221,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'futur simple',
-      conjugations: {
+      'tense': 'futur simple',
+      'conjugations': {
         'I will go': "j'irais",
         'you will go': 'tu iras',
         'he will go': 'il ira',
@@ -237,8 +237,8 @@ export const verbTable = {
   ],
   'pouvoir': [
     {
-      tense: 'présent',
-      conjugations: {
+      'tense': 'présent',
+      'conjugations': {
         'I can': 'je peux',
         'you can': 'tu peux',
         'he can': 'il peut',
@@ -251,8 +251,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'passé composé',
-      conjugations: {
+      'tense': 'passé composé',
+      'conjugations': {
         'I could': "j'ai pu",
         'you could': 'tu as pu',
         'he could': 'il a pu',
@@ -265,8 +265,8 @@ export const verbTable = {
       }
     },
     {
-      tense: 'imparfait',
-      conjugations: {
+      'tense': 'imparfait',
+      'conjugations': {
         'I could': "je pouvais",
         'you could': 'tu pouvais',
         'he could': 'il pouvait',
@@ -279,17 +279,17 @@ export const verbTable = {
       }
     },
     {
-      tense: 'futur simple',
-      conjugations: {
-        'I will go': "je pourrais",
-        'you will go': 'tu pourras',
-        'he will go': 'il pourra',
+      'tense': 'futur simple',
+      'conjugations': {
+        'I will be able to': "je pourrais",
+        'you will be able to': 'tu pourras',
+        'he will be able to': 'il pourra',
         'she was': 'elle pourra',
-        'we will go (informal)': 'on pourra',
-        'we will go': 'nous pourrons',
-        'you will go (pl)': 'vous pourrez',
-        'they will go (masc)': 'ils pourront',
-        'they will go (fem)': 'elles pourront'
+        'we will be able to (informal)': 'on pourra',
+        'we will be able to': 'nous pourrons',
+        'you will be able to (pl)': 'vous pourrez',
+        'they will be able to (masc)': 'ils pourront',
+        'they will be able to (fem)': 'elles pourront'
       }
     },
   ]

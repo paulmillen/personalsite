@@ -1,7 +1,11 @@
 <script>
   import { onMount } from "svelte";
-  import { verbTable, availableTenses } from "./data.js";
   import { getTranslationData } from "./dataHelpers.js";
+  import {
+    verbTable,
+    availableTenses,
+    fetchAndStoreVerbData
+  } from "./store.js";
   import Popup from "./components/Popup.svelte";
   import Whale from "./components/Whale.svelte";
 
@@ -11,13 +15,16 @@
   let isPopupVisible = false;
   let positionX = 0;
   let positionY = 0;
+  let apiDataPromise;
 
   onMount(() => {
-    translationData = getTranslationData(availableTenses, verbTable);
+    apiDataPromise = fetchAndStoreVerbData().then(
+      () => (translationData = getTranslationData($availableTenses, $verbTable))
+    );
   });
 
   const getNextTranslation = () => {
-    translationData = getTranslationData(availableTenses, verbTable);
+    translationData = getTranslationData($availableTenses, $verbTable);
     isAnswerCorrect = null;
     value = "";
   };
@@ -122,30 +129,39 @@
 </svelte:head>
 <div class="container">
   <div class="inner-container">
-    <Whale {isAnswerCorrect} />
-    <p>{`tense: ${translationData.tense}`}</p>
-    <div class="translation-text-container">
-      <h1>{translationData.en}</h1>
-      <img
-        on:click={showPopup}
-        on:mouseleave={hidePopup}
-        class="flag-img"
-        alt="french flag"
-        src="assets/france-flag-icon.png" />
-    </div>
-    <form>
-      <input
-        on:keydown={() => (isAnswerCorrect = null)}
-        bind:value
-        placeholder="translation" />
-      <button
-        class="check-button"
-        disabled={value === ''}
-        on:click|preventDefault={() => (isAnswerCorrect = value === translationData.fr)}>
-        check
+    {#await apiDataPromise}
+      <p>loading...</p>
+    {:then response}
+      <Whale {isAnswerCorrect} />
+      <p>{`tense: ${translationData.tense}`}</p>
+      <div class="translation-text-container">
+        <h1>{translationData.en}</h1>
+        <img
+          on:click={showPopup}
+          on:mouseleave={hidePopup}
+          class="flag-img"
+          alt="french flag"
+          src="assets/france-flag-icon.png" />
+      </div>
+      <form>
+        <input
+          on:keydown={() => (isAnswerCorrect = null)}
+          bind:value
+          placeholder="translation" />
+        <button
+          class="check-button"
+          disabled={value === ''}
+          on:click|preventDefault={() => (isAnswerCorrect = value === translationData.fr)}>
+          check
+        </button>
+      </form>
+      <button class="next-button" on:click={getNextTranslation}>
+        Another!
       </button>
-    </form>
-    <button class="next-button" on:click={getNextTranslation}>Another!</button>
+    {:catch error}
+      <h1>Oh no!</h1>
+      <p>{error.message}</p>
+    {/await}
   </div>
   {#if positionX && positionY && showPopup}
     <Popup {positionX} {positionY} text={translationData.fr} />

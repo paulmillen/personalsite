@@ -1,11 +1,16 @@
-from flask import Flask, send_from_directory, jsonify
+from flask import Flask, send_from_directory, request, jsonify
+from verbtable import get_verbtable_response
 
 app = Flask(__name__, static_folder='../client/public', static_url_path='/public')
-
 
 @app.route('/health-check')
 def health_check():
     return jsonify({"status": "healthy"})
+
+@app.route('/api/verbtable', methods=['POST'])
+def apiVerbtable():
+    response = get_verbtable_response(request.json)
+    return jsonify({ "data": response})
 
 @app.route('/assets/<path:path>')
 def assets(path):
@@ -22,5 +27,4 @@ def global_css():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    print(repr(path))
     return app.send_static_file('index.html')
