@@ -6,7 +6,11 @@ const prod = mode === 'production';
 
 module.exports = {
 	devServer: {
-		historyApiFallback: true
+		historyApiFallback: true,
+		proxy: {
+			'/api': 'http://localhost:8000'
+		},
+		publicPath: '/build/'
 	},
 	entry: {
 		bundle: ['./src/main.js']

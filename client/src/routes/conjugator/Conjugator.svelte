@@ -8,6 +8,7 @@
   } from "./store.js";
   import Popup from "./components/Popup.svelte";
   import Whale from "./components/Whale.svelte";
+  import SettingsModal from "./components/SettingsModal.svelte";
 
   let translationData = {};
   let value = "";
@@ -16,6 +17,7 @@
   let positionX = 0;
   let positionY = 0;
   let apiDataPromise;
+  let showSettingsModal = false;
 
   onMount(() => {
     apiDataPromise = fetchAndStoreVerbData().then(
@@ -39,6 +41,10 @@
     isPopupVisible = false;
     positionX = null;
     positionY = null;
+  };
+
+  const handleModalButtonClick = () => {
+    showSettingsModal = !showSettingsModal;
   };
 </script>
 
@@ -79,6 +85,18 @@
 
   button:disabled {
     color: grey;
+  }
+
+  .modal-button {
+    border: none;
+    font-size: 35px;
+    max-width: min-content;
+    margin-bottom: 40px;
+  }
+
+  .modal-button:hover {
+    background-color: transparent;
+    cursor: pointer;
   }
 
   .container {
@@ -132,6 +150,9 @@
     {#await apiDataPromise}
       <p>loading...</p>
     {:then response}
+      <button class="modal-button" on:click={handleModalButtonClick}>
+        &#9881;
+      </button>
       <Whale {isAnswerCorrect} />
       <p>{`tense: ${translationData.tense}`}</p>
       <div class="translation-text-container">
@@ -158,6 +179,9 @@
       <button class="next-button" on:click={getNextTranslation}>
         Another!
       </button>
+      <SettingsModal
+        on:closeModal={handleModalButtonClick}
+        showModal={showSettingsModal} />
     {:catch error}
       <h1>Oh no!</h1>
       <p>{error.message}</p>
