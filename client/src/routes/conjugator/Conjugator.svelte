@@ -62,6 +62,7 @@
   form {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin: 15px 0 10px 0;
     text-align: center;
   }
@@ -69,6 +70,9 @@
   input {
     height: 50px;
     font-size: 20px;
+    width: 100%;
+    margin-right: 20px;
+    text-indent: 10px;
   }
 
   button {
@@ -181,7 +185,8 @@
       </button>
       <SettingsModal
         on:closeModal={handleModalButtonClick}
-        showModal={showSettingsModal} />
+        showModal={showSettingsModal}
+        onConfirm={getNextTranslation} />
     {:catch error}
       <h1>Oh no!</h1>
       <p>{error.message}</p>

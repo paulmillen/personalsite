@@ -4,7 +4,8 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
     "build-dev": "cross-env webpack",
-    "dev": "webpack-dev-server --content-base public"
+    "dev": "webpack-dev-server --content-base public",
+    "server": "cd ../server && . ./env/bin/activate && gunicorn -w 4 server:app"
   },
   "devDependencies": {
     "css-loader": "^3.5.2",

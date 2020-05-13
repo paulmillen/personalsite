@@ -1,22 +1,32 @@
-$ npm i
-$ npm run dev
+## server setup:
 
-or 
-
-$ npm run build
-
-while running the flask server in /server
-
-setup:
-
-$ python3.8 env venv
+```
+$ cd ./server
+$ python3 -m venv env
 $ pip install flask gunicorn
+```
 
-then:
+to run on port 8000:
 
+```
 $ . ./env/bin/activate
 $ gunicorn -w 4 server:app
+```
 
-or in root dir, run 
+## client
 
-$ ./startup.sh
+Will run a dev server on 8080 proxied to the flask server
+
+```
+$ npm i
+$ npm run server
+$ npm run dev
+```
+
+## build:
+
+Run server to host on 8000
+
+```
+$ npm run build
+```
