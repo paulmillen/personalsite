@@ -2,7 +2,7 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { flip } from "svelte/animate";
   import { quintOut } from "svelte/easing";
-  import { crossfade } from "svelte/transition";
+  import { crossfade, fade } from "svelte/transition";
   import {
     availableVerbs,
     verbTable,
@@ -54,7 +54,9 @@
 
 <style>
   .modal-container {
-    display: none;
+    display: flex;
+    visibility: hidden;
+    opacity: 0;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -64,10 +66,12 @@
     overflow: auto;
     background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
+    transition: visibility 300ms, opacity 300ms ease;
   }
 
   .showModal {
-    display: flex;
+    visibility: visible;
+    opacity: 1;
     justify-content: center;
     align-content: center;
   }
@@ -158,7 +162,7 @@
   }
 </style>
 
-<div class="modal-container" class:showModal>
+<div transition:fade class="modal-container" class:showModal>
   <div class="modal-content">
     <div class="title-container">
       <span class="title">
