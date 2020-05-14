@@ -1,0 +1,1 @@
+web: cd /client && npm install &&  npm run build; cd ../server && gunicorn -w 4 ./server/server:app
