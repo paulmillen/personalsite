@@ -176,7 +176,7 @@
         <button
           class="check-button"
           disabled={value === ''}
-          on:click|preventDefault={() => (isAnswerCorrect = value === translationData.fr)}>
+          on:click|preventDefault={() => (isAnswerCorrect = value.toLowerCase() === translationData.fr)}>
           check
         </button>
       </form>
