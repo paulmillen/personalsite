@@ -1,4 +1,4 @@
-## server setup:
+# server setup
 
 ```
 $ cd ./server
@@ -13,7 +13,7 @@ $ . ./env/bin/activate
 $ gunicorn -w 4 server:app
 ```
 
-## client
+# client
 
 Will run a dev server on 8080 proxied to the flask server
 
@@ -29,4 +29,11 @@ Run server to host on 8000
 
 ```
 $ npm run build
+```
+
+# quickstart from root dir once setup is done
+
+```
+$ npm run start-server
+$ npm run start-dev
 ```

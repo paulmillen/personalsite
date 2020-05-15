@@ -55,8 +55,6 @@
 <style>
   .modal-container {
     display: flex;
-    visibility: hidden;
-    opacity: 0;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -64,16 +62,8 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-    transition: visibility 300ms, opacity 300ms ease;
-  }
-
-  .showModal {
-    visibility: visible;
-    opacity: 1;
-    justify-content: center;
-    align-content: center;
+    background-color: #000;
+    background-color: #0006;
   }
 
   .modal-content {
@@ -162,49 +152,51 @@
   }
 </style>
 
-<div transition:fade class="modal-container" class:showModal>
-  <div class="modal-content">
-    <div class="title-container">
-      <span class="title">
-        <strong>Verb Selector</strong>
-      </span>
-      <button class="close-button" on:click={handleClose}>&#10060;</button>
-    </div>
-    <div class="verb-lists-container">
-      <div class="verb-list selected-verbs">
-        {#each currentVerbs as verb (verb)}
-          <button
-            class="verb-button"
-            on:click={deSelect(verb)}
-            in:receive={{ key: verb }}
-            out:send={{ key: verb }}
-            animate:flip={{ duration: 200 }}>
-            {verb}
-          </button>
-        {/each}
-        <span>----</span>
-        <span class="selected-text">
-          {currentVerbs.length ? 'selected' : 'non selected!'}
+{#if showModal}
+  <div transition:fade={{ duration: 250 }} class="modal-container">
+    <div class="modal-content">
+      <div class="title-container">
+        <span class="title">
+          <strong>Verb Selector</strong>
         </span>
+        <button class="close-button" on:click={handleClose}>&#10060;</button>
       </div>
-      <div class="verb-list">
-        {#each unselectedVerbs as verb (verb)}
-          <button
-            class="verb-button"
-            on:click={select(verb)}
-            in:receive={{ key: verb }}
-            out:send={{ key: verb }}
-            animate:flip={{ duration: 200 }}>
-            {verb}
-          </button>
-        {/each}
+      <div class="verb-lists-container">
+        <div class="verb-list selected-verbs">
+          {#each currentVerbs as verb (verb)}
+            <button
+              class="verb-button"
+              on:click={deSelect(verb)}
+              in:receive={{ key: verb }}
+              out:send={{ key: verb }}
+              animate:flip={{ duration: 200 }}>
+              {verb}
+            </button>
+          {/each}
+          <span>----</span>
+          <span class="selected-text">
+            {currentVerbs.length ? 'selected' : 'non selected!'}
+          </span>
+        </div>
+        <div class="verb-list">
+          {#each unselectedVerbs as verb (verb)}
+            <button
+              class="verb-button"
+              on:click={select(verb)}
+              in:receive={{ key: verb }}
+              out:send={{ key: verb }}
+              animate:flip={{ duration: 200 }}>
+              {verb}
+            </button>
+          {/each}
+        </div>
       </div>
+      <button
+        on:click={confirm}
+        disabled={!currentVerbs.length}
+        class="confirm-button">
+        Confirm!
+      </button>
     </div>
-    <button
-      on:click={confirm}
-      disabled={!currentVerbs.length}
-      class="confirm-button">
-      Confirm!
-    </button>
   </div>
-</div>
+{/if}
