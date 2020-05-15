@@ -62,7 +62,6 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: #000;
     background-color: #0006;
   }
 
