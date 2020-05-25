@@ -30,7 +30,6 @@
   };
 
   const showPopup = event => {
-    console.log(event);
     isPopupVisible = true;
     positionX = event.clientX;
     positionY = event.clientY;

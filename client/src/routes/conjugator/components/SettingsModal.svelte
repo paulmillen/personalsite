@@ -104,13 +104,16 @@
 
   .verb-lists-container {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: auto;
   }
 
   .verb-list {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 200px;
+    width: 45%;
     min-height: 200px;
   }
 
