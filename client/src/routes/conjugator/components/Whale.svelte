@@ -14,10 +14,11 @@
     position: relative;
     color: #fff;
     text-align: center;
-    min-width: 150px;
+    flex: 2;
     background: #0f4c81;
     border-radius: 15px;
-    padding: 20px;
+    padding: 5%;
+    margin-right: 5%;
   }
 
   .header-text:after {
@@ -36,8 +37,9 @@
   }
 
   .whale-img {
-    height: 150px;
-    width: auto;
+    height: auto;
+    width: 50%;
+    flex: 3;
   }
 </style>
 

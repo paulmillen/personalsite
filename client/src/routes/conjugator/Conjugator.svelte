@@ -6,6 +6,7 @@
     availableTenses,
     fetchAndStoreVerbData
   } from "./store.js";
+  import ClueFlag from "./components/ClueFlag.svelte";
   import Popup from "./components/Popup.svelte";
   import Whale from "./components/Whale.svelte";
   import SettingsModal from "./components/SettingsModal.svelte";
@@ -13,9 +14,6 @@
   let translationData = {};
   let value = "";
   let isAnswerCorrect = null;
-  let isPopupVisible = false;
-  let positionX = 0;
-  let positionY = 0;
   let apiDataPromise;
   let showSettingsModal = false;
 
@@ -32,6 +30,7 @@
   };
 
   const showPopup = event => {
+    console.log(event);
     isPopupVisible = true;
     positionX = event.clientX;
     positionY = event.clientY;
@@ -69,10 +68,20 @@
 
   input {
     height: 50px;
-    font-size: 20px;
-    width: 100%;
-    margin-right: 20px;
+    flex: 4;
+    font-size: 5vw;
+    margin-right: 5%;
     text-indent: 10px;
+  }
+
+  @media (min-width: 768px) {
+    input {
+      height: 50px;
+      flex: 4;
+      font-size: 20px;
+      margin-right: 5%;
+      text-indent: 10px;
+    }
   }
 
   button {
@@ -115,26 +124,51 @@
 
   .inner-container {
     display: flex;
+    flex: 1;
     flex-direction: column;
-    margin: auto;
-    min-width: 440px;
-    max-width: 440px;
     background-color: #419ae9;
+    margin: 5px;
+  }
+
+  @media (min-width: 768px) {
+    .inner-container {
+      display: flex;
+      flex: 0;
+      flex-direction: column;
+      margin: auto;
+      min-width: 440px;
+      max-width: 440px;
+      background-color: #419ae9;
+    }
   }
 
   .translation-text-container {
     display: flex;
   }
 
-  .flag-img {
-    cursor: pointer;
-    margin: 8px;
-    height: 20px;
-    width: auto;
+  .clue-flag-mob {
+    width: 8%;
+    margin-top: auto;
+  }
+
+  .clue-flag {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .clue-flag-mob {
+      display: none;
+    }
+
+    .clue-flag {
+      display: block;
+      width: 6%;
+      margin-left: 2%;
+    }
   }
 
   .check-button {
-    width: 100px;
+    flex: 1;
     height: 50px;
   }
 
@@ -161,12 +195,9 @@
       <p>{`tense: ${translationData.tense}`}</p>
       <div class="translation-text-container">
         <h1>{translationData.en}</h1>
-        <img
-          on:click={showPopup}
-          on:mouseleave={hidePopup}
-          class="flag-img"
-          alt="french flag"
-          src="assets/france-flag-icon.png" />
+        <div class="clue-flag">
+          <ClueFlag frenchTranslation={translationData.fr} />
+        </div>
       </div>
       <form>
         <input
@@ -183,6 +214,9 @@
       <button class="next-button" on:click={getNextTranslation}>
         Another!
       </button>
+      <div class="clue-flag-mob">
+        <ClueFlag frenchTranslation={translationData.fr} />
+      </div>
       <SettingsModal
         on:closeModal={handleModalButtonClick}
         showModal={showSettingsModal}
@@ -192,7 +226,4 @@
       <p>{error.message}</p>
     {/await}
   </div>
-  {#if positionX && positionY && showPopup}
-    <Popup {positionX} {positionY} text={translationData.fr} />
-  {/if}
 </div>
