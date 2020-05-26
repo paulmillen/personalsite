@@ -165,6 +165,7 @@
 </style>
 
 <svelte:head>
+  <title>Verb Whale</title>
   <link
     href="https://fonts.googleapis.com/css?family=Quicksand"
     rel="stylesheet" />
