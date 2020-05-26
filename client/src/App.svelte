@@ -2,7 +2,7 @@
   import { Router, Route } from "svelte-routing";
   import { Link } from "svelte-routing";
   import Home from "./routes/Home.svelte";
-  import Conjugator from "./routes/conjugator/Conjugator.svelte";
+  import VerbWhale from "./routes/verbwhale/VerbWhale.svelte";
 </script>
 
 <style>
@@ -14,7 +14,7 @@
 
 <Router>
   <div class="route-container">
-    <Route path="/conjugator" component={Conjugator} />
+    <Route path="/verb-whale" component={VerbWhale} />
     <Route path="/" component={Home} />
   </div>
 </Router>
