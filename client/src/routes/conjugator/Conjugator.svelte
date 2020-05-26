@@ -99,11 +99,19 @@
     color: grey;
   }
 
+  .header-button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
   .modal-button {
     border: none;
     font-size: 35px;
     max-width: min-content;
-    margin-bottom: 40px;
+    padding: 0;
   }
 
   .modal-button:hover {
@@ -145,27 +153,6 @@
     display: flex;
   }
 
-  .clue-flag-mob {
-    width: 8%;
-    margin-top: auto;
-  }
-
-  .clue-flag {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    .clue-flag-mob {
-      display: none;
-    }
-
-    .clue-flag {
-      display: block;
-      width: 6%;
-      margin-left: 2%;
-    }
-  }
-
   .check-button {
     flex: 1;
     height: 50px;
@@ -187,16 +174,16 @@
     {#await apiDataPromise}
       <p>loading...</p>
     {:then response}
-      <button class="modal-button" on:click={handleModalButtonClick}>
-        &#9881;
-      </button>
+      <div class="header-button-container">
+        <ClueFlag frenchTranslation={translationData.fr} />
+        <button class="modal-button" on:click={handleModalButtonClick}>
+          &#9881;
+        </button>
+      </div>
       <Whale {isAnswerCorrect} />
       <p>{`tense: ${translationData.tense}`}</p>
       <div class="translation-text-container">
         <h1>{translationData.en}</h1>
-        <div class="clue-flag">
-          <ClueFlag frenchTranslation={translationData.fr} />
-        </div>
       </div>
       <form>
         <input
@@ -213,9 +200,6 @@
       <button class="next-button" on:click={getNextTranslation}>
         Another!
       </button>
-      <div class="clue-flag-mob">
-        <ClueFlag frenchTranslation={translationData.fr} />
-      </div>
       <SettingsModal
         on:closeModal={handleModalButtonClick}
         showModal={showSettingsModal}

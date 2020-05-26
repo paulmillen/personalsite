@@ -24,7 +24,6 @@
   .flag-container {
     position: relative;
     cursor: pointer;
-    margin-top: auto;
     font-weight: 600;
     color: #000;
   }

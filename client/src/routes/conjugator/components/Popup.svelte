@@ -21,6 +21,6 @@
 
 <div
   transition:fade
-  style="--top:{`${positionY - 30}px`}; --left:{`${positionX + 25}px`}">
+  style="--top:{`${positionY}px`}; --left:{`${positionX + 30}px`}">
   {text}
 </div>

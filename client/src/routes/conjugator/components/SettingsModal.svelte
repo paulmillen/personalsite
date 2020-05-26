@@ -74,8 +74,14 @@
     border-radius: 5px;
     max-width: 440px;
     width: 100%;
-    margin: auto;
+    margin: auto 3px auto 3px;
     padding: 5px;
+  }
+
+  @media (min-width: 768px) {
+    .modal-content {
+      margin: auto;
+    }
   }
 
   .title-container {
@@ -125,8 +131,10 @@
   }
 
   .selected-text {
+    margin-top: 5px;
     font-weight: 600;
   }
+
   .verb-button {
     font-size: 20px;
     cursor: pointer;
@@ -175,10 +183,9 @@
               {verb}
             </button>
           {/each}
-          <span>----</span>
-          <span class="selected-text">
-            {currentVerbs.length ? 'selected' : 'non selected!'}
-          </span>
+          {#if !currentVerbs.length}
+            <span class="selected-text">none selected!</span>
+          {/if}
         </div>
         <div class="verb-list">
           {#each unselectedVerbs as verb (verb)}
