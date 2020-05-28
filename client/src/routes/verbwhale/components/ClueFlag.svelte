@@ -34,7 +34,7 @@
 
   .clue-text {
     position: absolute;
-    top: 50%;
+    top: 47%;
     left: 50%;
     transform: translate(-50%, -50%);
   }

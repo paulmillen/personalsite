@@ -8,8 +8,5 @@
     "heroku-postbuild": "cd client && npm install && npm run build",
     "start-dev": "cd client && npm run dev",
     "start-server": "cd client && npm run server"
-  },
-  "dependencies": {
-    "three": "^0.116.1"
   }
 }
