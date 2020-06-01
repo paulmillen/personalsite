@@ -12,6 +12,8 @@
     scene,
     camera,
     baseCentre,
+    baseRight,
+    baseLeft,
     sphereCentre,
     sphereRight,
     sphereLeft;
@@ -62,7 +64,7 @@
     baseCentre.add(sphereCentre);
     baseCentre.add(shadowMeshCentre);
 
-    const baseRight = new THREE.Object3D();
+    baseRight = new THREE.Object3D();
     scene.add(baseRight);
 
     const shadowMeshRight = new THREE.Mesh(shadowGeometry, shadowMaterial);
@@ -76,7 +78,7 @@
     baseRight.add(shadowMeshRight);
     baseRight.add(sphereRight);
 
-    const baseLeft = new THREE.Object3D();
+    baseLeft = new THREE.Object3D();
     scene.add(baseLeft);
 
     const shadowMeshLeft = new THREE.Mesh(shadowGeometry, shadowMaterial);
@@ -98,7 +100,7 @@
   }
 
   window.addEventListener("mousemove", mouseMove, false);
-  const mouse = new THREE.Vector3();
+  const mouse = new THREE.Vector2();
 
   function mouseMove(event) {
     event.preventDefault();
@@ -118,7 +120,12 @@
     ]);
 
     if (intersects.length !== 0) {
-      intersects[0].object.parent.position.z = 0.5;
+      intersects[0].object.parent.position.z = 0.2;
+    } else if (intersects !== null) {
+      baseCentre.position.z = 0;
+      baseRight.position.z = 0;
+      baseLeft.position.z = 0;
+      intersects = null;
     }
 
     renderer.render(scene, camera);
