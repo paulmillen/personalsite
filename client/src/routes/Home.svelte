@@ -131,7 +131,14 @@
     renderer.render(scene, camera);
   }
 
-  function animate() {
+  function animate(time) {
+    time *= 0.0007;
+    const yOffOne = Math.abs(Math.sin(time * 2 - 0.03));
+    const yOffTwo = Math.abs(Math.sin(time * 2 - 0.004));
+    const yOffThree = Math.abs(Math.sin(time * 2 + 0.003));
+    sphereCentre.position.y = 0.5 + THREE.MathUtils.lerp(-0.01, 0.013, yOffOne);
+    sphereRight.position.y = 0.5 + THREE.MathUtils.lerp(-0.01, 0.009, yOffTwo);
+    sphereLeft.position.y = 0.5 + THREE.MathUtils.lerp(-0.01, 0.01, yOffThree);
     requestAnimationFrame(animate);
     render();
   }
