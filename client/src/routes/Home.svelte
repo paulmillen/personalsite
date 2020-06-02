@@ -162,6 +162,20 @@
     }
   }
 
+  function resetSpherePositionTween(initialVector, resetVector, time = 2500) {
+    tween = new TWEEN.Tween(initialVector)
+      .to(
+        {
+          x: resetVector.x,
+          y: resetVector.y,
+          z: resetVector.z
+        },
+        time
+      )
+      .easing(TWEEN.Easing.Elastic.Out)
+      .start();
+  }
+
   function handleMouseClick(event) {
     updateMouseCoords(event);
 
@@ -175,29 +189,15 @@
 
     if (intersects.length) {
       if (selectedSphere && selectedSphere !== intersects[0].object) {
-        tween = new TWEEN.Tween(selectedSphere.parent.position)
-          .to(
-            {
-              x: selectedSphere.originalParentPosition.x,
-              y: selectedSphere.originalParentPosition.y,
-              z: selectedSphere.originalParentPosition.z
-            },
-            2500
-          )
-          .easing(TWEEN.Easing.Elastic.Out)
-          .start();
+        resetSpherePositionTween(
+          selectedSphere.parent.position,
+          selectedSphere.originalParentPosition
+        );
       } else if (selectedSphere) {
-        tween = new TWEEN.Tween(selectedSphere.parent.position)
-          .to(
-            {
-              x: selectedSphere.originalParentPosition.x,
-              y: selectedSphere.originalParentPosition.y,
-              z: selectedSphere.originalParentPosition.z
-            },
-            2500
-          )
-          .easing(TWEEN.Easing.Elastic.Out)
-          .start();
+        resetSpherePositionTween(
+          selectedSphere.parent.position,
+          selectedSphere.originalParentPosition
+        );
 
         selectedSphere = null;
         return;
@@ -217,18 +217,10 @@
         .easing(TWEEN.Easing.Elastic.Out)
         .start();
     } else if (selectedSphere) {
-      tween = new TWEEN.Tween(selectedSphere.parent.position)
-        .to(
-          {
-            x: selectedSphere.originalParentPosition.x,
-            y: selectedSphere.originalParentPosition.y,
-            z: selectedSphere.originalParentPosition.z
-          },
-          2500
-        )
-        .easing(TWEEN.Easing.Elastic.Out)
-        .start();
-
+      resetSpherePositionTween(
+        selectedSphere.parent.position,
+        selectedSphere.originalParentPosition
+      );
       selectedSphere = null;
     }
   }
