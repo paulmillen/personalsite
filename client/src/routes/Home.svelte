@@ -7,6 +7,8 @@
   onMount(() => {
     init();
     animate();
+    mouse.x = -10;
+    mouse.y = -10;
   });
 
   const mouse = new THREE.Vector2();
@@ -24,7 +26,9 @@
     intersected,
     selectedSphere,
     tween,
-    geometryChangeTween;
+    geometryChangeTween,
+    DEFAULT_ON_HOVER_RAYCAST_OBJECTS,
+    onHoverRaycastObjects;
 
   function init() {
     window.addEventListener("mousemove", updateMouseCoords, false);
@@ -34,7 +38,7 @@
       70,
       window.innerWidth / window.innerHeight,
       0.01,
-      1000
+      10
     );
     camera.position.set(0, 0.4, 1.3);
 
@@ -111,7 +115,12 @@
     baseLeft.add(shadowMeshLeft);
     baseLeft.add(sphereLeft);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    DEFAULT_ON_HOVER_RAYCAST_OBJECTS = [sphereLeft, sphereCentre, sphereRight];
+    onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
+
+    renderer = new THREE.WebGLRenderer({
+      antialias: true
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     const threeContainer = document.getElementById("three");
@@ -129,11 +138,7 @@
     const intersectedOrigColor = 0xffffff;
 
     raycaster.setFromCamera(mouse, camera);
-    intersects = raycaster.intersectObjects([
-      sphereCentre,
-      sphereRight,
-      sphereLeft
-    ]);
+    intersects = raycaster.intersectObjects(onHoverRaycastObjects);
 
     if (intersects.length) {
       if (intersected !== intersects[0].object) {
@@ -174,6 +179,8 @@
   }
 
   function resetSphere(sphereObject) {
+    sphereObject.material.color.setHex(0xffffff);
+    onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
     if (geometryChangeTween) {
       geometryChangeTween.stop();
     }
@@ -192,10 +199,9 @@
     let intersects = [];
 
     raycaster.setFromCamera(mouse, camera);
-    intersects = raycaster.intersectObjects(
-      [sphereCentre, sphereRight, sphereLeft],
-      true
-    );
+    intersects = raycaster.intersectObjects([
+      ...DEFAULT_ON_HOVER_RAYCAST_OBJECTS
+    ]);
 
     if (intersects.length) {
       if (selectedSphere && selectedSphere === intersects[0].object) {
@@ -212,20 +218,30 @@
         new TWEEN.Tween(selectedSphere.parent.position)
           .to(
             {
-              x: -selectedSphere.position.x,
+              x: -selectedSphere.position.x / 1.5,
               y: -0.05,
               z: 1
             },
             1500
           )
+          .onStart(() => {
+            onHoverRaycastObjects = onHoverRaycastObjects.filter(
+              object => object.name !== selectedSphere.name
+            );
+            selectedSphere.material.color.setRGB({ r: 1, g: -2, b: -2 });
+          })
           .easing(TWEEN.Easing.Quartic.Out)
           .onComplete(() => {
             if (selectedSphere) {
               selectedSphere.geometry.dispose();
               selectedSphere.geometry = new THREE.PlaneGeometry(0.21, 0.21, 0);
+
               geometryChangeTween = new TWEEN.Tween(selectedSphere.scale)
                 .to({ y: window.innerHeight }, 1000)
                 .easing(TWEEN.Easing.Quartic.In)
+                .onComplete(() => {
+                  selectedSphere.material.color.setHex(0xffffff);
+                })
                 .start();
             }
           })
@@ -266,14 +282,13 @@
 </script>
 
 <style>
+  :global(canvas) {
+    display: block;
+  }
+
   .three-container {
     position: absolute;
   }
-  .test-span {
-    display: none;
-  }
 </style>
 
-<div class="three-container" id="three">
-  <span class="test-span">blah blah blah</span>
-</div>
+<div class="three-container" id="three" />
