@@ -14,6 +14,7 @@
     scene,
     camera,
     raycaster,
+    sphereGeometry,
     baseCentre,
     baseRight,
     baseLeft,
@@ -22,7 +23,8 @@
     sphereLeft,
     intersected,
     selectedSphere,
-    tween;
+    tween,
+    geometryChangeTween;
 
   function init() {
     window.addEventListener("mousemove", updateMouseCoords, false);
@@ -52,7 +54,7 @@
     light2.position.set(0, 5, 60);
     scene.add(light2);
 
-    const sphereGeometry = new THREE.SphereGeometry(0.1, 50, 50);
+    sphereGeometry = new THREE.SphereGeometry(0.1, 50, 50);
     const sphereMaterial = new THREE.MeshStandardMaterial();
 
     const shadowGeometry = new THREE.PlaneBufferGeometry(1, 1);
@@ -137,33 +139,28 @@
       if (intersected !== intersects[0].object) {
         intersected = intersects[0].object;
 
-        if (intersected.name === "sphereLeft") {
-          tween = new TWEEN.Tween(intersected.material.color)
-            .to({ r: 1, g: -2, b: -2 }, 500)
-            .easing(TWEEN.Easing.Quartic.In)
-            .start();
-        } else if (intersected.name === "sphereCentre") {
-          tween = new TWEEN.Tween(intersected.material.color)
-            .to({ r: -2, g: 1, b: -2 }, 500)
-            .easing(TWEEN.Easing.Quartic.In)
-            .start();
-        } else if (intersected.name === "sphereRight") {
-          tween = new TWEEN.Tween(intersected.material.color)
-            .to({ r: -2, g: -2, b: 1 }, 500)
-            .easing(TWEEN.Easing.Quartic.In)
-            .start();
-        }
+        tween = new TWEEN.Tween(intersected.material.color)
+          .to({ r: 1, g: -2, b: -2 }, 300)
+          .easing(TWEEN.Easing.Cubic.In)
+          .start();
       }
     } else {
       if (intersected) {
-        intersected.material.color.setHex(0xffffff);
+        if (tween) {
+          tween.stop();
+        }
+        tween = new TWEEN.Tween(intersected.material.color)
+          .to({ r: 1, g: 1, b: 1 }, 200)
+          .easing(TWEEN.Easing.Cubic.Out)
+          .start();
       }
+
       intersected = null;
     }
   }
 
   function resetSpherePositionTween(initialVector, resetVector, time = 2500) {
-    tween = new TWEEN.Tween(initialVector)
+    new TWEEN.Tween(initialVector)
       .to(
         {
           x: resetVector.x,
@@ -174,6 +171,19 @@
       )
       .easing(TWEEN.Easing.Elastic.Out)
       .start();
+  }
+
+  function resetSphere(sphereObject) {
+    if (geometryChangeTween) {
+      geometryChangeTween.stop();
+    }
+    sphereObject.geometry.dispose();
+    sphereObject.geometry = sphereGeometry.clone();
+    sphereObject.scale.set(1, 1, 1);
+    resetSpherePositionTween(
+      sphereObject.parent.position,
+      sphereObject.originalParentPosition
+    );
   }
 
   function handleMouseClick(event) {
@@ -188,44 +198,46 @@
     );
 
     if (intersects.length) {
-      if (selectedSphere && selectedSphere !== intersects[0].object) {
-        resetSpherePositionTween(
-          selectedSphere.parent.position,
-          selectedSphere.originalParentPosition
-        );
-      } else if (selectedSphere) {
-        resetSpherePositionTween(
-          selectedSphere.parent.position,
-          selectedSphere.originalParentPosition
-        );
-
+      if (selectedSphere && selectedSphere === intersects[0].object) {
+        resetSphere(selectedSphere);
         selectedSphere = null;
-        return;
-      }
+      } else {
+        if (selectedSphere) {
+          resetSphere(selectedSphere);
+        }
 
-      selectedSphere = intersects[0].object;
-      selectedSphere.originalParentPosition = selectedSphere.parent.position.clone();
-      tween = new TWEEN.Tween(selectedSphere.parent.position)
-        .to(
-          {
-            x: -selectedSphere.position.x,
-            y: -0.05,
-            z: 1
-          },
-          2500
-        )
-        .easing(TWEEN.Easing.Elastic.Out)
-        .start();
+        selectedSphere = intersects[0].object;
+        selectedSphere.originalParentPosition = selectedSphere.parent.position.clone();
+
+        new TWEEN.Tween(selectedSphere.parent.position)
+          .to(
+            {
+              x: -selectedSphere.position.x,
+              y: -0.05,
+              z: 1
+            },
+            1500
+          )
+          .easing(TWEEN.Easing.Quartic.Out)
+          .onComplete(() => {
+            if (selectedSphere) {
+              selectedSphere.geometry.dispose();
+              selectedSphere.geometry = new THREE.PlaneGeometry(0.21, 0.21, 0);
+              geometryChangeTween = new TWEEN.Tween(selectedSphere.scale)
+                .to({ y: window.innerHeight }, 1000)
+                .easing(TWEEN.Easing.Quartic.In)
+                .start();
+            }
+          })
+          .start();
+      }
     } else if (selectedSphere) {
-      resetSpherePositionTween(
-        selectedSphere.parent.position,
-        selectedSphere.originalParentPosition
-      );
+      resetSphere(selectedSphere);
       selectedSphere = null;
     }
   }
 
-  function sphereMovement(time) {
+  function sphereBobbing(time) {
     time *= 0.0004;
     const yOffOne = -Math.abs(Math.sin(time * 2 - 0.06));
     const yOffTwo = Math.abs(Math.sin(time * 2 - 0.004));
@@ -238,7 +250,7 @@
 
   function update(time) {
     handleSphereOnHover(time);
-    sphereMovement(time);
+    sphereBobbing(time);
   }
 
   function render() {
@@ -253,4 +265,15 @@
   }
 </script>
 
-<div id="three" />
+<style>
+  .three-container {
+    position: absolute;
+  }
+  .test-span {
+    display: none;
+  }
+</style>
+
+<div class="three-container" id="three">
+  <span class="test-span">blah blah blah</span>
+</div>
