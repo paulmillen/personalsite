@@ -26,9 +26,18 @@
     intersected,
     selectedSphere,
     tween,
+    opacityTween,
     geometryChangeTween,
     DEFAULT_ON_HOVER_RAYCAST_OBJECTS,
-    onHoverRaycastObjects;
+    onHoverRaycastObjects,
+    aboutTexture,
+    webTexture,
+    moreTexture,
+    iconGeometry,
+    aboutImagePlane,
+    webImagePlane,
+    moreImagePlane,
+    hideIconTween;
 
   function init() {
     window.addEventListener("mousemove", updateMouseCoords, false);
@@ -46,6 +55,10 @@
 
     const loader = new THREE.TextureLoader();
     const shadowTexture = loader.load("/assets/roundshadow.png");
+
+    aboutTexture = loader.load("/assets/person.png");
+    webTexture = loader.load("/assets/web.png");
+    moreTexture = loader.load("/assets/more.png");
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color("white");
@@ -112,8 +125,50 @@
     sphereLeft = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
     sphereLeft.position.set(-0.6, 0.5, 0);
     sphereLeft.name = "sphereLeft";
+
     baseLeft.add(shadowMeshLeft);
     baseLeft.add(sphereLeft);
+
+    iconGeometry = new THREE.PlaneGeometry(0.1, 0.1, 10, 10);
+
+    aboutImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: aboutTexture,
+        transparent: true,
+        opacity: 1
+      })
+    );
+
+    aboutImagePlane.position.set(-0.558, 0.5, 0.1);
+    aboutImagePlane.name = "aboutImagePlane";
+    baseLeft.add(aboutImagePlane);
+
+    webImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: webTexture,
+        transparent: true,
+        opacity: 1
+      })
+    );
+
+    webImagePlane.position.set(0, 0.5, 0.1);
+    webImagePlane.name = "webImagePlane";
+    baseCentre.add(webImagePlane);
+
+    moreImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: moreTexture,
+        transparent: true,
+        opacity: 1
+      })
+    );
+
+    moreImagePlane.position.set(0.565, 0.5, 0.1);
+    moreImagePlane.name = "moreImagePlane";
+    baseRight.add(moreImagePlane);
 
     DEFAULT_ON_HOVER_RAYCAST_OBJECTS = [sphereLeft, sphereCentre, sphereRight];
     onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
@@ -154,6 +209,7 @@
         if (tween) {
           tween.stop();
         }
+
         tween = new TWEEN.Tween(intersected.material.color)
           .to({ r: 1, g: 1, b: 1 }, 200)
           .easing(TWEEN.Easing.Cubic.Out)
@@ -181,9 +237,17 @@
   function resetSphere(sphereObject) {
     sphereObject.material.color.setHex(0xffffff);
     onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
+
+    if (hideIconTween) {
+      hideIconTween.stop();
+    }
+
+    sphereObject.parent.children[2].material.opacity = 1;
+
     if (geometryChangeTween) {
       geometryChangeTween.stop();
     }
+
     sphereObject.geometry.dispose();
     sphereObject.geometry = sphereGeometry.clone();
     sphereObject.scale.set(1, 1, 1);
@@ -220,7 +284,7 @@
             {
               x: -selectedSphere.position.x / 1.5,
               y: -0.05,
-              z: 1
+              z: 0.95
             },
             1500
           )
@@ -228,6 +292,12 @@
             onHoverRaycastObjects = onHoverRaycastObjects.filter(
               object => object.name !== selectedSphere.name
             );
+            hideIconTween = new TWEEN.Tween(
+              selectedSphere.parent.children[2].material
+            )
+              .to({ opacity: 0 }, 750)
+              .easing(TWEEN.Easing.Cubic.In)
+              .start();
             selectedSphere.material.color.setRGB({ r: 1, g: -2, b: -2 });
           })
           .easing(TWEEN.Easing.Quartic.Out)
@@ -258,10 +328,19 @@
     const yOffOne = -Math.abs(Math.sin(time * 2 - 0.06));
     const yOffTwo = Math.abs(Math.sin(time * 2 - 0.004));
     const yOffThree = Math.abs(Math.sin(time * 2 + 0.007)) * 0.9;
+
     sphereCentre.position.y =
       0.5 + THREE.MathUtils.lerp(-0.009, 0.012, yOffOne);
+    webImagePlane.position.y =
+      0.49 + THREE.MathUtils.lerp(-0.009, 0.012, yOffOne);
+
     sphereRight.position.y = 0.5 + THREE.MathUtils.lerp(-0.01, 0.009, yOffTwo);
+    moreImagePlane.position.y =
+      0.48 + THREE.MathUtils.lerp(-0.01, 0.009, yOffTwo);
+
     sphereLeft.position.y = 0.48 + THREE.MathUtils.lerp(-0.01, 0.01, yOffThree);
+    aboutImagePlane.position.y =
+      0.475 + THREE.MathUtils.lerp(-0.01, 0.01, yOffThree);
   }
 
   function update(time) {
