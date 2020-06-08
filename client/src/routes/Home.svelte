@@ -11,8 +11,16 @@
     mouse.y = -10;
   });
 
+  let aboutTextVisibility = false;
+  let workTextVisibility = false;
+  let otherTextVisibility = false;
+
   const mouse = new THREE.Vector2();
+  const ICON_BASE_OPACITY = 0.7;
+  const TARGET_ASPECT_RATIO = 16 / 9;
+
   let renderer,
+    threeContainer,
     scene,
     camera,
     raycaster,
@@ -39,13 +47,48 @@
     moreImagePlane,
     hideIconTween;
 
+  const getAspectSize = (
+    availableWidth,
+    availableHeight,
+    targetAspectRatio
+  ) => {
+    const currentRatio = availableWidth / availableHeight;
+    return currentRatio > targetAspectRatio
+      ? {
+          width: availableHeight * targetAspectRatio,
+          height: availableHeight
+        }
+      : {
+          width: availableWidth,
+          height: availableWidth / targetAspectRatio
+        };
+  };
+
+  const resizeCanvasToDisplaySize = () => {
+    const newDimensions = getAspectSize(
+      threeContainer.clientWidth,
+      threeContainer.clientHeight,
+      TARGET_ASPECT_RATIO
+    );
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(newDimensions.width, newDimensions.height);
+  };
+
   function init() {
+    threeContainer = document.getElementById("three");
     window.addEventListener("mousemove", updateMouseCoords, false);
     window.addEventListener("click", handleMouseClick, true);
 
+    const initialDimensions = getAspectSize(
+      threeContainer.clientWidth,
+      threeContainer.clientHeight,
+      TARGET_ASPECT_RATIO
+    );
+
     camera = new THREE.PerspectiveCamera(
       70,
-      window.innerWidth / window.innerHeight,
+      initialDimensions.width / initialDimensions.height,
       0.01,
       10
     );
@@ -136,7 +179,7 @@
       new THREE.MeshBasicMaterial({
         map: aboutTexture,
         transparent: true,
-        opacity: 1
+        opacity: ICON_BASE_OPACITY
       })
     );
 
@@ -149,7 +192,7 @@
       new THREE.MeshBasicMaterial({
         map: webTexture,
         transparent: true,
-        opacity: 1
+        opacity: ICON_BASE_OPACITY
       })
     );
 
@@ -162,7 +205,7 @@
       new THREE.MeshBasicMaterial({
         map: moreTexture,
         transparent: true,
-        opacity: 1
+        opacity: ICON_BASE_OPACITY
       })
     );
 
@@ -174,18 +217,22 @@
     onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
 
     renderer = new THREE.WebGLRenderer({
+      alpha: true,
       antialias: true
     });
-    renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const threeContainer = document.getElementById("three");
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(initialDimensions.width, initialDimensions.height);
     threeContainer.appendChild(renderer.domElement);
+
+    window.addEventListener("resize", resizeCanvasToDisplaySize, false);
+    resizeCanvasToDisplaySize();
   }
 
   function updateMouseCoords(event) {
     event.preventDefault();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.x = (event.clientX / threeContainer.clientWidth) * 2 - 1.25;
+    mouse.y = -(event.clientY / threeContainer.clientHeight) * 2 + 1;
   }
 
   function handleSphereOnHover(time) {
@@ -220,6 +267,22 @@
     }
   }
 
+  const showSelectedTextElement = selectedSphereName => {
+    if (selectedSphereName === "sphereLeft") {
+      aboutTextVisibility = true;
+    } else if (selectedSphereName === "sphereCentre") {
+      workTextVisibility = true;
+    } else if (selectedSphereName === "sphereRight") {
+      otherTextVisibility = true;
+    }
+  };
+
+  const hideAllTextElements = () => {
+    aboutTextVisibility = false;
+    workTextVisibility = false;
+    otherTextVisibility = false;
+  };
+
   function resetSpherePositionTween(initialVector, resetVector, time = 2500) {
     new TWEEN.Tween(initialVector)
       .to(
@@ -235,6 +298,7 @@
   }
 
   function resetSphere(sphereObject) {
+    hideAllTextElements();
     sphereObject.material.color.setHex(0xffffff);
     onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
 
@@ -242,7 +306,7 @@
       hideIconTween.stop();
     }
 
-    sphereObject.parent.children[2].material.opacity = 1;
+    sphereObject.parent.children[2].material.opacity = ICON_BASE_OPACITY;
 
     if (geometryChangeTween) {
       geometryChangeTween.stop();
@@ -311,6 +375,7 @@
                 .easing(TWEEN.Easing.Quartic.In)
                 .onComplete(() => {
                   selectedSphere.material.color.setHex(0xffffff);
+                  showSelectedTextElement(selectedSphere.name);
                 })
                 .start();
             }
@@ -324,7 +389,6 @@
   }
 
   function sphereBobbing(time) {
-    time *= 0.0004;
     const yOffOne = -Math.abs(Math.sin(time * 2 - 0.06));
     const yOffTwo = Math.abs(Math.sin(time * 2 - 0.004));
     const yOffThree = Math.abs(Math.sin(time * 2 + 0.007)) * 0.9;
@@ -353,6 +417,7 @@
   }
 
   function animate(time) {
+    time *= 0.0004;
     requestAnimationFrame(animate);
     TWEEN.update();
     update(time);
@@ -362,12 +427,71 @@
 
 <style>
   :global(canvas) {
-    display: block;
+    position: absolute;
+    margin: auto;
   }
 
   .three-container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    width: 80%;
+    height: 100vh;
+    margin: auto;
+  }
+
+  .overlay {
+    display: flex;
     position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+  }
+
+  .text-container {
+    display: none;
+    position: absolute;
+    top: calc(50vh - 20vw);
+    width: 18vw;
+    height: 20vw;
+    font-size: 1.5vw;
+  }
+
+  .about-text-container {
+    left: 15.76%;
+  }
+
+  .work-text-container {
+    left: 38.75%;
+  }
+
+  .other-text-container {
+    right: 15.76%;
+  }
+
+  .aboutTextVisibility {
+    display: block;
+  }
+
+  .workTextVisibility {
+    display: block;
+  }
+
+  .otherTextVisibility {
+    display: block;
   }
 </style>
 
-<div class="three-container" id="three" />
+<div class="three-container" id="three">
+  <div class="overlay">
+    <div class:aboutTextVisibility class="text-container about-text-container">
+      <span>About</span>
+    </div>
+    <div class:workTextVisibility class="text-container work-text-container">
+      <span>Work</span>
+    </div>
+    <div class:otherTextVisibility class="text-container other-text-container">
+      <span>Other stuff</span>
+    </div>
+  </div>
+</div>
