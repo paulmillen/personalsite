@@ -12,10 +12,6 @@ def apiVerbtable():
     response = get_verbtable_response(request.json)
     return jsonify({ "data": response})
 
-@app.route('/assets/<path:path>')
-def assets(path):
-    return send_from_directory('../client/public/assets', path)
-
 @app.route('/build/<path:path>')
 def build(path):
     return send_from_directory('../client/public/build', path)
