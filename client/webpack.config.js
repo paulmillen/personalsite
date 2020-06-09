@@ -19,6 +19,7 @@ module.exports = {
   resolve: {
     alias: {
       svelte: path.resolve('node_modules', 'svelte'),
+      assets: path.resolve('src', 'assets')
     },
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main'],
@@ -53,12 +54,15 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-          },
-        ]
+        test: /\.png$/,
+        use: {
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            publicPath: '/build/assets',
+            outputPath: '/assets'
+          }
+        },
       },
     ],
   },

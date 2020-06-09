@@ -1,5 +1,6 @@
 <script>
   import { fade } from "svelte/transition";
+  import whaleImage from "assets/whale.png";
   export let isAnswerCorrect;
 </script>
 
@@ -55,5 +56,5 @@
       <span in:fade={{ duration: 300 }}>Traduis!</span>
     {/if}
   </h1>
-  <img alt="whale" src="/assets/whale.png" class="whale-img" />
+  <img alt="whale" src={whaleImage} class="whale-img" />
 </div>

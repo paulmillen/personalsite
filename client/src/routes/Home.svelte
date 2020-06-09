@@ -3,6 +3,10 @@
   import { Link } from "svelte-routing";
   import * as THREE from "three";
   import TWEEN from "@tweenjs/tween.js";
+  import shadowImage from "assets/roundshadow.png";
+  import aboutImage from "assets/person.png";
+  import webImage from "assets/web.png";
+  import moreImage from "assets/more.png";
 
   onMount(() => {
     init();
@@ -97,11 +101,11 @@
     raycaster = new THREE.Raycaster();
 
     const loader = new THREE.TextureLoader();
-    const shadowTexture = loader.load("/assets/roundshadow.png");
+    const shadowTexture = loader.load(shadowImage);
 
-    aboutTexture = loader.load("/assets/person.png");
-    webTexture = loader.load("/assets/web.png");
-    moreTexture = loader.load("/assets/more.png");
+    aboutTexture = loader.load(aboutImage);
+    webTexture = loader.load(webImage);
+    moreTexture = loader.load(moreImage);
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color("white");

@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import flagImage from "assets/france-flag-icon.png";
   import Popup from "./Popup.svelte";
 
   export let frenchTranslation = "";
@@ -42,7 +43,7 @@
 
 <div>
   <div on:click={showPopup} on:mouseleave={hidePopup} class="flag-container">
-    <img class="flag-img" alt="french flag" src="assets/france-flag-icon.png" />
+    <img class="flag-img" alt="french flag" src={flagImage} />
     <span class="clue-text">?</span>
   </div>
   {#if positionX && positionY && showPopup}
