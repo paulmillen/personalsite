@@ -22,6 +22,14 @@
   const mouse = new THREE.Vector2();
   const ICON_BASE_OPACITY = 0.7;
   const TARGET_ASPECT_RATIO = 16 / 9;
+  const SPHERE_RADIUS = 0.1;
+  const SPHERE_SEGMENTS = 50;
+  const Y_ORIG_POSITION = 0.5;
+  const Z_ORIG_POSITION = 0;
+  const SPHERE_X_OFFSET = 0.6;
+  const SPHERE_LEFT_NAME = "sphereLeft";
+  const SPHERE_RIGHT_NAME = "sphereRight";
+  const SPHERE_CENTRE_NAME = "sphereCentre";
 
   let renderer,
     threeContainer,
@@ -80,163 +88,6 @@
     renderer.setSize(newDimensions.width, newDimensions.height);
   };
 
-  function init() {
-    threeContainer = document.getElementById("three");
-    window.addEventListener("mousemove", updateMouseCoords, false);
-    window.addEventListener("click", handleMouseClick, true);
-
-    const initialDimensions = getAspectSize(
-      threeContainer.clientWidth,
-      threeContainer.clientHeight,
-      TARGET_ASPECT_RATIO
-    );
-
-    camera = new THREE.PerspectiveCamera(
-      70,
-      initialDimensions.width / initialDimensions.height,
-      0.01,
-      10
-    );
-    camera.position.set(0, 0.4, 1.3);
-
-    raycaster = new THREE.Raycaster();
-
-    const loader = new THREE.TextureLoader();
-    const shadowTexture = loader.load(shadowImage);
-
-    aboutTexture = loader.load(aboutImage);
-    webTexture = loader.load(webImage);
-    moreTexture = loader.load(moreImage);
-
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color("white");
-
-    const light = new THREE.DirectionalLight(0xffffff, 0.8);
-    light.position.set(0, 50, 30);
-    scene.add(light);
-
-    const light2 = new THREE.DirectionalLight(0xffffff, 0.3);
-    light2.position.set(0, 5, 60);
-    scene.add(light2);
-
-    sphereGeometry = new THREE.SphereGeometry(0.1, 50, 50);
-    const sphereMaterial = new THREE.MeshStandardMaterial();
-
-    const shadowGeometry = new THREE.PlaneBufferGeometry(1, 1);
-    const shadowMaterial = new THREE.MeshBasicMaterial({
-      map: shadowTexture,
-      transparent: true,
-      depthWrite: false
-    });
-
-    baseCentre = new THREE.Object3D();
-    baseCentre.originalPosition = baseCentre.position.clone();
-    scene.add(baseCentre);
-
-    const shadowMeshCentre = new THREE.Mesh(shadowGeometry, shadowMaterial);
-    shadowMeshCentre.position.set(0, 0.001, -0.1);
-    shadowMeshCentre.rotation.x = Math.PI * -0.5;
-    shadowMeshCentre.scale.set(0.3, 0.3, 0.3);
-
-    sphereCentre = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
-    sphereCentre.position.set(0, 0.5, 0);
-    sphereCentre.name = "sphereCentre";
-    baseCentre.add(sphereCentre);
-    baseCentre.add(shadowMeshCentre);
-
-    baseRight = new THREE.Object3D();
-    baseRight.originalPosition = baseRight.position.clone();
-    scene.add(baseRight);
-
-    const shadowMeshRight = shadowMeshCentre.clone();
-    shadowMeshRight.position.set(0.63, 0.001, -0.1);
-    shadowMeshRight.rotation.x = Math.PI * -0.5;
-    shadowMeshRight.rotation.y = -0.06;
-    shadowMeshRight.scale.set(0.3, 0.3, 0.3);
-
-    sphereRight = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
-    sphereRight.position.set(0.6, 0.5, 0);
-    sphereRight.name = "sphereRight";
-    baseRight.add(shadowMeshRight);
-    baseRight.add(sphereRight);
-
-    baseLeft = new THREE.Object3D();
-    baseLeft.originalPosition = baseLeft.position.clone();
-    scene.add(baseLeft);
-
-    const shadowMeshLeft = new THREE.Mesh(
-      shadowGeometry,
-      shadowMaterial.clone()
-    );
-    shadowMeshLeft.position.set(-0.63, 0.001, -0.1);
-    shadowMeshLeft.rotation.x = Math.PI * -0.5;
-    shadowMeshLeft.rotation.y = 0.06;
-    shadowMeshLeft.scale.set(0.3, 0.3, 0.3);
-
-    sphereLeft = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
-    sphereLeft.position.set(-0.6, 0.5, 0);
-    sphereLeft.name = "sphereLeft";
-
-    baseLeft.add(shadowMeshLeft);
-    baseLeft.add(sphereLeft);
-
-    iconGeometry = new THREE.PlaneGeometry(0.1, 0.1, 10, 10);
-
-    aboutImagePlane = new THREE.Mesh(
-      iconGeometry,
-      new THREE.MeshBasicMaterial({
-        map: aboutTexture,
-        transparent: true,
-        opacity: ICON_BASE_OPACITY
-      })
-    );
-
-    aboutImagePlane.position.set(-0.558, 0.5, 0.1);
-    aboutImagePlane.name = "aboutImagePlane";
-    baseLeft.add(aboutImagePlane);
-
-    webImagePlane = new THREE.Mesh(
-      iconGeometry,
-      new THREE.MeshBasicMaterial({
-        map: webTexture,
-        transparent: true,
-        opacity: ICON_BASE_OPACITY
-      })
-    );
-
-    webImagePlane.position.set(0, 0.5, 0.1);
-    webImagePlane.name = "webImagePlane";
-    baseCentre.add(webImagePlane);
-
-    moreImagePlane = new THREE.Mesh(
-      iconGeometry,
-      new THREE.MeshBasicMaterial({
-        map: moreTexture,
-        transparent: true,
-        opacity: ICON_BASE_OPACITY
-      })
-    );
-
-    moreImagePlane.position.set(0.565, 0.5, 0.1);
-    moreImagePlane.name = "moreImagePlane";
-    baseRight.add(moreImagePlane);
-
-    DEFAULT_ON_HOVER_RAYCAST_OBJECTS = [sphereLeft, sphereCentre, sphereRight];
-    onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
-
-    renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true
-    });
-
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(initialDimensions.width, initialDimensions.height);
-    threeContainer.appendChild(renderer.domElement);
-
-    window.addEventListener("resize", resizeCanvasToDisplaySize, false);
-    resizeCanvasToDisplaySize();
-  }
-
   function updateMouseCoords(event) {
     mouse.x = (event.clientX / threeContainer.clientWidth) * 2 - 1.25;
     mouse.y = -(event.clientY / threeContainer.clientHeight) * 2 + 1;
@@ -275,11 +126,11 @@
   }
 
   const showSelectedTextElement = selectedSphereName => {
-    if (selectedSphereName === "sphereLeft") {
+    if (selectedSphereName === SPHERE_LEFT_NAME) {
       aboutTextVisibility = true;
-    } else if (selectedSphereName === "sphereCentre") {
+    } else if (selectedSphereName === SPHERE_CENTRE_NAME) {
       workTextVisibility = true;
-    } else if (selectedSphereName === "sphereRight") {
+    } else if (selectedSphereName === SPHERE_RIGHT_NAME) {
       otherTextVisibility = true;
     }
   };
@@ -296,7 +147,7 @@
         {
           x: resetVector.x,
           y: resetVector.y,
-          z: 0
+          z: resetVector.z
         },
         time
       )
@@ -375,7 +226,11 @@
           .onComplete(() => {
             if (selectedSphere) {
               selectedSphere.geometry.dispose();
-              selectedSphere.geometry = new THREE.PlaneGeometry(0.21, 0.21, 0);
+              selectedSphere.geometry = new THREE.PlaneGeometry(
+                0.21,
+                0.21,
+                Z_ORIG_POSITION
+              );
 
               geometryChangeTween = new TWEEN.Tween(selectedSphere.scale)
                 .to({ y: window.innerHeight }, 600)
@@ -411,6 +266,189 @@
     sphereLeft.position.y = 0.48 + THREE.MathUtils.lerp(-0.01, 0.01, yOffThree);
     aboutImagePlane.position.y =
       0.475 + THREE.MathUtils.lerp(-0.01, 0.01, yOffThree);
+  }
+
+  // ** init ** //
+  function init() {
+    threeContainer = document.getElementById("three");
+
+    window.addEventListener("mousemove", updateMouseCoords, false);
+    window.addEventListener("click", handleMouseClick, true);
+    window.addEventListener("resize", resizeCanvasToDisplaySize, false);
+
+    const initialDimensions = getAspectSize(
+      threeContainer.clientWidth,
+      threeContainer.clientHeight,
+      TARGET_ASPECT_RATIO
+    );
+
+    camera = new THREE.PerspectiveCamera(
+      70,
+      initialDimensions.width / initialDimensions.height,
+      0.01,
+      10
+    );
+    camera.position.set(0, 0.4, 1.3);
+
+    raycaster = new THREE.Raycaster();
+
+    // textures
+    const loader = new THREE.TextureLoader();
+    const shadowTexture = loader.load(shadowImage);
+
+    aboutTexture = loader.load(aboutImage);
+    webTexture = loader.load(webImage);
+    moreTexture = loader.load(moreImage);
+
+    // scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color("white");
+
+    // light
+    const light = new THREE.DirectionalLight(0xffffff, 0.8);
+    light.position.set(0, 50, 30);
+    scene.add(light);
+
+    const light2 = new THREE.DirectionalLight(0xffffff, 0.3);
+    light2.position.set(0, 5, 60);
+    scene.add(light2);
+
+    // spheres
+    sphereGeometry = new THREE.SphereGeometry(
+      SPHERE_RADIUS,
+      SPHERE_SEGMENTS,
+      SPHERE_SEGMENTS
+    );
+    const sphereMaterial = new THREE.MeshStandardMaterial();
+
+    const shadowGeometry = new THREE.PlaneBufferGeometry(1, 1);
+    const shadowMaterial = new THREE.MeshBasicMaterial({
+      map: shadowTexture,
+      transparent: true,
+      depthWrite: false
+    });
+
+    //create and populate bases
+    // left
+    baseLeft = new THREE.Object3D();
+    baseLeft.originalPosition = baseLeft.position.clone();
+    scene.add(baseLeft);
+
+    const shadowMeshLeft = new THREE.Mesh(
+      shadowGeometry,
+      shadowMaterial.clone()
+    );
+    shadowMeshLeft.position.set(-0.63, 0.001, -0.1);
+    shadowMeshLeft.rotation.x = Math.PI * -0.5;
+    shadowMeshLeft.rotation.y = 0.06;
+    shadowMeshLeft.scale.set(0.3, 0.3, 0.3);
+
+    sphereLeft = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
+    sphereLeft.position.set(
+      SPHERE_X_OFFSET * -1,
+      Y_ORIG_POSITION,
+      Z_ORIG_POSITION
+    );
+    sphereLeft.name = SPHERE_LEFT_NAME;
+
+    baseLeft.add(shadowMeshLeft);
+    baseLeft.add(sphereLeft);
+
+    // centre
+    baseCentre = new THREE.Object3D();
+    baseCentre.originalPosition = baseCentre.position.clone();
+    scene.add(baseCentre);
+
+    const shadowMeshCentre = new THREE.Mesh(shadowGeometry, shadowMaterial);
+    shadowMeshCentre.position.set(0, 0.001, -0.1);
+    shadowMeshCentre.rotation.x = Math.PI * -0.5;
+    shadowMeshCentre.scale.set(0.3, 0.3, 0.3);
+
+    sphereCentre = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
+    sphereCentre.position.set(0, Y_ORIG_POSITION, Z_ORIG_POSITION);
+    sphereCentre.name = SPHERE_CENTRE_NAME;
+
+    baseCentre.add(sphereCentre);
+    baseCentre.add(shadowMeshCentre);
+
+    // right
+    baseRight = new THREE.Object3D();
+    baseRight.originalPosition = baseRight.position.clone();
+    scene.add(baseRight);
+
+    const shadowMeshRight = shadowMeshCentre.clone();
+    shadowMeshRight.position.set(0.63, 0.001, -0.1);
+    shadowMeshRight.rotation.x = Math.PI * -0.5;
+    shadowMeshRight.rotation.y = -0.06;
+    shadowMeshRight.scale.set(0.3, 0.3, 0.3);
+
+    sphereRight = new THREE.Mesh(sphereGeometry, sphereMaterial.clone());
+    sphereRight.position.set(SPHERE_X_OFFSET, Y_ORIG_POSITION, Z_ORIG_POSITION);
+    sphereRight.name = SPHERE_RIGHT_NAME;
+
+    baseRight.add(shadowMeshRight);
+    baseRight.add(sphereRight);
+
+    // icon planes
+    iconGeometry = new THREE.PlaneGeometry(0.1, 0.1, 10, 10);
+
+    // left (about)
+    aboutImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: aboutTexture,
+        transparent: true,
+        opacity: ICON_BASE_OPACITY
+      })
+    );
+
+    aboutImagePlane.position.set(-0.558, 0.5, 0.1);
+    aboutImagePlane.name = "aboutImagePlane";
+    baseLeft.add(aboutImagePlane);
+
+    // centre (web work)
+    webImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: webTexture,
+        transparent: true,
+        opacity: ICON_BASE_OPACITY
+      })
+    );
+
+    webImagePlane.position.set(0, 0.5, 0.1);
+    webImagePlane.name = "webImagePlane";
+    baseCentre.add(webImagePlane);
+
+    // right (more info)
+    moreImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: moreTexture,
+        transparent: true,
+        opacity: ICON_BASE_OPACITY
+      })
+    );
+
+    moreImagePlane.position.set(0.565, 0.5, 0.1);
+    moreImagePlane.name = "moreImagePlane";
+    baseRight.add(moreImagePlane);
+
+    // set hoverable objects
+    DEFAULT_ON_HOVER_RAYCAST_OBJECTS = [sphereLeft, sphereCentre, sphereRight];
+    onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
+
+    // renderer
+    renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true
+    });
+
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(initialDimensions.width, initialDimensions.height);
+    threeContainer.appendChild(renderer.domElement);
+
+    resizeCanvasToDisplaySize();
   }
 
   function update(time) {

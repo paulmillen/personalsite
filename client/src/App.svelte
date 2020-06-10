@@ -1,7 +1,7 @@
 <script>
   import { Router, Route } from "svelte-routing";
   import { Link } from "svelte-routing";
-  import Home from "./routes/Home.svelte";
+  import Home from "./routes/home/Home.svelte";
   import VerbWhale from "./routes/verbwhale/VerbWhale.svelte";
 </script>
 
