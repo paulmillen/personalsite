@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { Link } from "svelte-routing";
   import * as THREE from "three";
   import TWEEN from "@tweenjs/tween.js";
@@ -13,6 +13,12 @@
     animate();
     mouse.x = -10;
     mouse.y = -10;
+  });
+
+  onDestroy(() => {
+    window.removeEventListener("mousemove", updateMouseCoords, false);
+    window.removeEventListener("click", handleMouseClick, true);
+    window.removeEventListener("resize", resizeCanvasToDisplaySize, false);
   });
 
   let aboutTextVisibility = false;
@@ -95,7 +101,6 @@
 
   function handleSphereOnHover(time) {
     let intersects = [];
-    const intersectedOrigColor = 0xffffff;
 
     raycaster.setFromCamera(mouse, camera);
     intersects = raycaster.intersectObjects(onHoverRaycastObjects);
