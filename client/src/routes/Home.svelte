@@ -40,6 +40,7 @@
     tween,
     opacityTween,
     geometryChangeTween,
+    resetPositionTween,
     DEFAULT_ON_HOVER_RAYCAST_OBJECTS,
     onHoverRaycastObjects,
     aboutTexture,
@@ -129,6 +130,7 @@
     });
 
     baseCentre = new THREE.Object3D();
+    baseCentre.originalPosition = baseCentre.position.clone();
     scene.add(baseCentre);
 
     const shadowMeshCentre = new THREE.Mesh(shadowGeometry, shadowMaterial);
@@ -143,6 +145,7 @@
     baseCentre.add(shadowMeshCentre);
 
     baseRight = new THREE.Object3D();
+    baseRight.originalPosition = baseRight.position.clone();
     scene.add(baseRight);
 
     const shadowMeshRight = shadowMeshCentre.clone();
@@ -158,6 +161,7 @@
     baseRight.add(sphereRight);
 
     baseLeft = new THREE.Object3D();
+    baseLeft.originalPosition = baseLeft.position.clone();
     scene.add(baseLeft);
 
     const shadowMeshLeft = new THREE.Mesh(
@@ -234,7 +238,6 @@
   }
 
   function updateMouseCoords(event) {
-    event.preventDefault();
     mouse.x = (event.clientX / threeContainer.clientWidth) * 2 - 1.25;
     mouse.y = -(event.clientY / threeContainer.clientHeight) * 2 + 1;
   }
@@ -287,13 +290,13 @@
     otherTextVisibility = false;
   };
 
-  function resetSpherePositionTween(initialVector, resetVector, time = 2500) {
-    new TWEEN.Tween(initialVector)
+  function resetSpherePositionTween(initialVector, resetVector, time = 1800) {
+    resetPositionTween = new TWEEN.Tween(initialVector)
       .to(
         {
           x: resetVector.x,
           y: resetVector.y,
-          z: resetVector.z
+          z: 0
         },
         time
       )
@@ -319,9 +322,10 @@
     sphereObject.geometry.dispose();
     sphereObject.geometry = sphereGeometry.clone();
     sphereObject.scale.set(1, 1, 1);
+
     resetSpherePositionTween(
       sphereObject.parent.position,
-      sphereObject.originalParentPosition
+      sphereObject.parent.originalPosition
     );
   }
 
@@ -345,16 +349,15 @@
         }
 
         selectedSphere = intersects[0].object;
-        selectedSphere.originalParentPosition = selectedSphere.parent.position.clone();
 
         new TWEEN.Tween(selectedSphere.parent.position)
           .to(
             {
               x: -selectedSphere.position.x / 1.5,
               y: -0.05,
-              z: 0.95
+              z: 0.95 - selectedSphere.position.z
             },
-            1500
+            1300
           )
           .onStart(() => {
             onHoverRaycastObjects = onHoverRaycastObjects.filter(
@@ -375,10 +378,9 @@
               selectedSphere.geometry = new THREE.PlaneGeometry(0.21, 0.21, 0);
 
               geometryChangeTween = new TWEEN.Tween(selectedSphere.scale)
-                .to({ y: window.innerHeight }, 1000)
+                .to({ y: window.innerHeight }, 600)
                 .easing(TWEEN.Easing.Quartic.In)
                 .onComplete(() => {
-                  selectedSphere.material.color.setHex(0xffffff);
                   showSelectedTextElement(selectedSphere.name);
                 })
                 .start();
@@ -435,6 +437,10 @@
     margin: auto;
   }
 
+  :global(a) {
+    color: burlywood;
+  }
+
   .three-container {
     display: flex;
     position: relative;
@@ -458,7 +464,9 @@
     top: calc(50vh - 20vw);
     width: 18vw;
     height: 20vw;
+    font-family: "Jaldi", Helvetica, sans-serif;
     font-size: 1.5vw;
+    color: #ffffee;
   }
 
   .about-text-container {
@@ -484,18 +492,68 @@
   .otherTextVisibility {
     display: block;
   }
+
+  .divider {
+    width: 5vw;
+    border: 2px solid #ffffee;
+    margin: 4vh auto;
+  }
 </style>
 
+<svelte:head>
+  <link href="https://fonts.googleapis.com/css?family=Jaldi" rel="stylesheet" />
+</svelte:head>
 <div class="three-container" id="three">
   <div class="overlay">
     <div class:aboutTextVisibility class="text-container about-text-container">
-      <span>About</span>
+      <p>
+        <strong>Hello</strong>
+      </p>
+      <p>My name is Paul and I am a software engineer based in London</p>
+      <p>
+        I do a lot of frontend with React, Vue and Svelte (this site is written
+        using Svelte!)
+      </p>
+      <p>
+        But I do the occasional bit of backend as well and I'm always keen to
+        learn more.
+      </p>
     </div>
     <div class:workTextVisibility class="text-container work-text-container">
-      <span>Work</span>
+      <p>
+        <strong>Stuff I'm working on...</strong>
+      </p>
+      <p style="font-size: 1.2vw;">
+        This is something I built to help me learn French:
+      </p>
+      <Link to="verb-whale">Verb Whale</Link>
+      <p style="font-size: 1.2vw; margin-top: 20vw">
+        Other things will go here when they're finished...
+      </p>
     </div>
     <div class:otherTextVisibility class="text-container other-text-container">
-      <span>Other stuff</span>
+      <span>
+        <p>
+          <strong>What else...</strong>
+        </p>
+        <p style="font-size: 1.2vw;">
+          Before I became a developer I was a sound guy for TV and film, and a
+          sound designer for theatre.
+        </p>
+        <p style="font-size: 1.2vw;">
+          Checkout my
+          <a href="https://github.com/paulmillen/cv-small">CV</a>
+          on Github if you're interested.
+        </p>
+        <div class="divider" />
+        <p style="font-size: 1.2vw;">
+          I enjoy distance running and film and digital photography.
+        </p>
+        <p style="font-size: 1.2vw;">
+          Let me bore you with some
+          <a href="https://www.flickr.com/photos/nmtm">photos...</a>
+        </p>
+      </span>
     </div>
   </div>
 </div>
