@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { Link } from "svelte-routing";
   import * as THREE from "three";
   import TWEEN from "@tweenjs/tween.js";
@@ -12,8 +12,13 @@
     animate();
   });
 
-  const mouse = new THREE.Vector2();
+  onDestroy(() => {
+    window.removeEventListener("touchstart", handleBoxTouchStart, false);
+    window.removeEventListener("touchmove", handleBoxTouchMove, false);
+  });
+
   let threeContainer,
+    halfContainerWidth,
     camera,
     scene,
     boxGeometry,
@@ -21,20 +26,36 @@
     webTexture,
     moreTexture,
     boxMaterial,
+    group,
     box,
-    mouseYonMouseDown,
-    renderer;
+    line,
+    renderer,
+    mouseX = 0,
+    mouseXOnMouseDown = 0,
+    targetRotation = 0,
+    targetRotationOnTouchStart = 0;
 
   function handleBoxTouchStart(event) {
     if (event.touches.length === 1) {
-      mouseYonMouseDown = event.touches[0].pageY;
+      mouseXOnMouseDown = event.touches[0].pageX - halfContainerWidth;
     }
   }
 
   function handleBoxTouchMove(event) {
     if (event.touches.length === 1) {
-      mouse.y = event.touches[0].pageY;
-      box.rotation.x = (mouse.y - mouseYonMouseDown) * 0.05;
+      mouseX = event.touches[0].pageX - halfContainerWidth;
+
+      if (mouseX - mouseXOnMouseDown > 100) {
+        new TWEEN.Tween(group.rotation)
+          .to({ y: group.rotation.y + Math.PI / 2 }, 400)
+          .easing(TWEEN.Easing.Cubic.In)
+          .start();
+      } else if (mouseX - mouseXOnMouseDown < -100) {
+        new TWEEN.Tween(group.rotation)
+          .to({ y: group.rotation.y - Math.PI / 2 }, 400)
+          .easing(TWEEN.Easing.Cubic.In)
+          .start();
+      }
     }
   }
 
@@ -43,6 +64,7 @@
     window.addEventListener("touchmove", handleBoxTouchMove, false);
 
     threeContainer = document.getElementById("three");
+    halfContainerWidth = threeContainer.clientWidth / 2;
 
     camera = new THREE.PerspectiveCamera(
       70,
@@ -50,7 +72,7 @@
       0.01,
       10
     );
-    camera.position.set(0, 0, 1);
+    camera.position.set(0, 0, 1.1);
 
     const loader = new THREE.TextureLoader();
     aboutTexture = loader.load(aboutImage);
@@ -70,10 +92,22 @@
     light2.position.set(0, 5, 60);
     scene.add(light2);
 
-    boxGeometry = new THREE.BoxGeometry(0.5, 0.5);
+    group = new THREE.Group();
+    scene.add(group);
+
+    // box
+    boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
     boxMaterial = new THREE.MeshBasicMaterial({ color: 0xaf0000 });
     box = new THREE.Mesh(boxGeometry, boxMaterial);
-    scene.add(box);
+    group.add(box);
+
+    // edges
+    var edges = new THREE.EdgesGeometry(boxGeometry);
+    line = new THREE.LineSegments(
+      edges,
+      new THREE.LineBasicMaterial({ color: 0x000000 })
+    );
+    group.add(line);
 
     renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -93,8 +127,8 @@
 
   function animate(time) {
     time *= 0.0004;
-    requestAnimationFrame(animate);
     TWEEN.update();
+    requestAnimationFrame(animate);
     update(time);
     render();
   }
