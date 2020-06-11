@@ -88,6 +88,17 @@
     }
   }
 
+  function boxBobbing(time) {
+    const interpolationFactor = -Math.abs(Math.sin(time - 0.06));
+
+    group.position.x =
+      0.1 + THREE.MathUtils.lerp(-0.06, 0.06, interpolationFactor);
+    group.position.y =
+      0.15 + THREE.MathUtils.lerp(-0.06, 0.06, interpolationFactor);
+    group.rotation.x =
+      0.4 + THREE.MathUtils.lerp(-0.08, 0.2, interpolationFactor * 2);
+  }
+
   function init() {
     window.addEventListener("touchstart", handleBoxTouchStart, false);
     window.addEventListener("touchmove", handleBoxTouchMove, false);
@@ -101,7 +112,8 @@
       0.01,
       10
     );
-    camera.position.set(0, 0, 1.1);
+    camera.position.set(0, 0.1, 1.1);
+    camera.rotation.y = -0.1;
 
     const loader = new THREE.TextureLoader();
     aboutTexture = loader.load(aboutImage);
@@ -121,7 +133,7 @@
     scene.add(group);
 
     // box
-    boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+    boxGeometry = new THREE.BoxBufferGeometry(0.5, 0.5, 0.5);
     boxMaterial = new THREE.MeshBasicMaterial({ color: 0xaf0000 });
     box = new THREE.Mesh(boxGeometry, boxMaterial);
     group.add(box);
@@ -176,13 +188,17 @@
     group.add(moreImagePlane);
 
     renderer = new THREE.WebGLRenderer({
-      alpha: true,
+      alpha: false,
       antialias: true
     });
 
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(threeContainer.clientWidth, threeContainer.clientHeight);
     threeContainer.appendChild(renderer.domElement);
+  }
+
+  function update(time) {
+    boxBobbing(time);
   }
 
   function render() {
@@ -192,6 +208,7 @@
   function animate(time) {
     time *= 0.0004;
     TWEEN.update();
+    update(time);
     requestAnimationFrame(animate);
     render();
   }
