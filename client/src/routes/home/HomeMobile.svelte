@@ -92,9 +92,9 @@
     const interpolationFactor = -Math.abs(Math.sin(time - 0.06));
 
     group.position.x =
-      0.1 + THREE.MathUtils.lerp(-0.06, 0.06, interpolationFactor);
+      0.22 + THREE.MathUtils.lerp(-0.06, 0.06, interpolationFactor);
     group.position.y =
-      0.15 + THREE.MathUtils.lerp(-0.06, 0.06, interpolationFactor);
+      0.2 + THREE.MathUtils.lerp(-0.06, 0.06, interpolationFactor);
     group.rotation.x =
       0.4 + THREE.MathUtils.lerp(-0.08, 0.2, interpolationFactor * 2);
   }
