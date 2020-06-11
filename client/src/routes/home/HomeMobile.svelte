@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import { fade } from "svelte/transition";
   import { Link } from "svelte-routing";
   import * as THREE from "three";
   import TWEEN from "@tweenjs/tween.js";
@@ -18,6 +19,7 @@
   });
 
   const ICON_BASE_OPACITY = 0.7;
+  const TEXT_PANEL_TRANSITION = 200;
 
   let threeContainer,
     halfContainerWidth,
@@ -61,8 +63,10 @@
           rotateGroupRightTween = new TWEEN.Tween(group.rotation)
             .to({ y: group.rotation.y + Math.PI / 2 }, 400)
             .easing(TWEEN.Easing.Cubic.In)
-            .onComplete(() => {
+            .onStart(() => {
               swipePosition += 1;
+            })
+            .onComplete(() => {
               rotateGroupRightTween = null;
             })
             .start();
@@ -70,8 +74,10 @@
       } else if (mouseX - mouseXOnMouseDown < -100 && group.rotation.y > -1.5) {
         if (!rotateGroupLeftTween) {
           rotateGroupLeftTween = new TWEEN.Tween(group.rotation)
-            .onComplete(() => {
+            .onStart(() => {
               swipePosition -= 1;
+            })
+            .onComplete(() => {
               rotateGroupLeftTween = null;
             })
             .to({ y: group.rotation.y - Math.PI / 2 }, 400)
@@ -234,23 +240,24 @@
 <div class="container">
   <div class="panel-container">
     {#if selectedHtmlPanel === 'about'}
-      <div class="text-container">
+      <div
+        class="text-container"
+        transition:fade={{ duration: TEXT_PANEL_TRANSITION }}>
         <p>
           <strong>Hello</strong>
         </p>
-        <p>My name is Paul and I am a software engineer based in London</p>
+        <p>My name is Paul and I am a software engineer based in London.</p>
+        <p>I do a lot of front-end with React, Vue and Svelte.</p>
         <p>
-          I do a lot of frontend with React, Vue and Svelte (this site is
-          written using Svelte!)
-        </p>
-        <p>
-          But I do the occasional bit of backend as well and I'm always keen to
+          But I do the occasional bit of back-end as well and I'm always keen to
           learn more.
         </p>
       </div>
     {/if}
     {#if selectedHtmlPanel === 'web'}
-      <div class="text-container">
+      <div
+        class="text-container"
+        transition:fade={{ duration: TEXT_PANEL_TRANSITION }}>
         <p>
           <strong>Stuff I'm working on...</strong>
         </p>
@@ -260,7 +267,9 @@
       </div>
     {/if}
     {#if selectedHtmlPanel === 'more'}
-      <div class="text-container">
+      <div
+        class="text-container"
+        transition:fade={{ duration: TEXT_PANEL_TRANSITION }}>
         <span>
           <p style="margin-bottom: 0;">
             <strong>What else...</strong>

@@ -536,13 +536,10 @@
         <p>
           <strong>Hello</strong>
         </p>
-        <p>My name is Paul and I am a software engineer based in London</p>
+        <p>My name is Paul and I am a software engineer based in London.</p>
+        <p>I do a lot of front-end with React, Vue and Svelte.</p>
         <p>
-          I do a lot of frontend with React, Vue and Svelte (this site is
-          written using Svelte!)
-        </p>
-        <p>
-          But I do the occasional bit of backend as well and I'm always keen to
+          But I do the occasional bit of back-end as well and I'm always keen to
           learn more.
         </p>
       </div>
