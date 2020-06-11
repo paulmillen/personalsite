@@ -21,9 +21,7 @@
     window.removeEventListener("resize", resizeCanvasToDisplaySize, false);
   });
 
-  let aboutTextVisibility = false;
-  let workTextVisibility = false;
-  let otherTextVisibility = false;
+  let visiblePanel = null;
 
   const mouse = new THREE.Vector2();
   const ICON_BASE_OPACITY = 0.7;
@@ -132,18 +130,16 @@
 
   const showSelectedTextElement = selectedSphereName => {
     if (selectedSphereName === SPHERE_LEFT_NAME) {
-      aboutTextVisibility = true;
+      visiblePanel = "about";
     } else if (selectedSphereName === SPHERE_CENTRE_NAME) {
-      workTextVisibility = true;
+      visiblePanel = "web";
     } else if (selectedSphereName === SPHERE_RIGHT_NAME) {
-      otherTextVisibility = true;
+      visiblePanel = "more";
     }
   };
 
   const hideAllTextElements = () => {
-    aboutTextVisibility = false;
-    workTextVisibility = false;
-    otherTextVisibility = false;
+    visiblePanel = null;
   };
 
   function resetSpherePositionTween(initialVector, resetVector, time = 1800) {
@@ -502,7 +498,6 @@
   }
 
   .text-container {
-    display: none;
     position: absolute;
     top: calc(50vh - 20vw);
     width: 18vw;
@@ -524,18 +519,6 @@
     right: 15.76%;
   }
 
-  .aboutTextVisibility {
-    display: block;
-  }
-
-  .workTextVisibility {
-    display: block;
-  }
-
-  .otherTextVisibility {
-    display: block;
-  }
-
   .divider {
     width: 5vw;
     border: 2px solid #ffffee;
@@ -548,55 +531,61 @@
 </svelte:head>
 <div class="three-container" id="three">
   <div class="overlay">
-    <div class:aboutTextVisibility class="text-container about-text-container">
-      <p>
-        <strong>Hello</strong>
-      </p>
-      <p>My name is Paul and I am a software engineer based in London</p>
-      <p>
-        I do a lot of frontend with React, Vue and Svelte (this site is written
-        using Svelte!)
-      </p>
-      <p>
-        But I do the occasional bit of backend as well and I'm always keen to
-        learn more.
-      </p>
-    </div>
-    <div class:workTextVisibility class="text-container work-text-container">
-      <p>
-        <strong>Stuff I'm working on...</strong>
-      </p>
-      <p style="font-size: 1.2vw;">
-        This is something I built to help me learn French:
-      </p>
-      <Link to="verb-whale">Verb Whale</Link>
-      <p style="font-size: 1.2vw; margin-top: 20vw">
-        Other things will go here when they're finished...
-      </p>
-    </div>
-    <div class:otherTextVisibility class="text-container other-text-container">
-      <span>
+    {#if visiblePanel === 'about'}
+      <div class="text-container about-text-container">
         <p>
-          <strong>What else...</strong>
+          <strong>Hello</strong>
+        </p>
+        <p>My name is Paul and I am a software engineer based in London</p>
+        <p>
+          I do a lot of frontend with React, Vue and Svelte (this site is
+          written using Svelte!)
+        </p>
+        <p>
+          But I do the occasional bit of backend as well and I'm always keen to
+          learn more.
+        </p>
+      </div>
+    {/if}
+    {#if visiblePanel === 'web'}
+      <div class="text-container work-text-container">
+        <p>
+          <strong>Stuff I'm working on...</strong>
         </p>
         <p style="font-size: 1.2vw;">
-          Before I became a developer I was a sound guy for TV and film, and a
-          sound designer for theatre.
+          This is something I built to help me learn French:
         </p>
-        <p style="font-size: 1.2vw;">
-          Checkout my
-          <a href="https://github.com/paulmillen/cv-small">CV</a>
-          on Github if you're interested.
+        <Link to="verb-whale">Verb Whale</Link>
+        <p style="font-size: 1.2vw; margin-top: 20vw">
+          Other things will go here when they're finished...
         </p>
-        <div class="divider" />
-        <p style="font-size: 1.2vw;">
-          I enjoy distance running and film and digital photography.
-        </p>
-        <p style="font-size: 1.2vw;">
-          Let me bore you with some
-          <a href="https://www.flickr.com/photos/nmtm">photos...</a>
-        </p>
-      </span>
-    </div>
+      </div>
+    {/if}
+    {#if visiblePanel === 'more'}
+      <div class="text-container other-text-container">
+        <span>
+          <p>
+            <strong>What else...</strong>
+          </p>
+          <p style="font-size: 1.2vw;">
+            Before I became a developer I was a sound guy for TV and film, and a
+            sound designer for theatre.
+          </p>
+          <p style="font-size: 1.2vw;">
+            Checkout my
+            <a href="https://github.com/paulmillen/cv-small">CV</a>
+            on Github if you're interested.
+          </p>
+          <div class="divider" />
+          <p style="font-size: 1.2vw;">
+            I enjoy distance running and film and digital photography.
+          </p>
+          <p style="font-size: 1.2vw;">
+            Let me bore you with some
+            <a href="https://www.flickr.com/photos/nmtm">photos...</a>
+          </p>
+        </span>
+      </div>
+    {/if}
   </div>
 </div>

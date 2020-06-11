@@ -17,6 +17,8 @@
     window.removeEventListener("touchmove", handleBoxTouchMove, false);
   });
 
+  const ICON_BASE_OPACITY = 0.7;
+
   let threeContainer,
     halfContainerWidth,
     camera,
@@ -29,11 +31,20 @@
     group,
     box,
     line,
+    iconGeometry,
+    aboutImagePlane,
+    webImagePlane,
+    moreImagePlane,
     renderer,
+    swipePosition = 0,
     mouseX = 0,
     mouseXOnMouseDown = 0,
     targetRotation = 0,
-    targetRotationOnTouchStart = 0;
+    targetRotationOnTouchStart = 0,
+    rotateGroupRightTween,
+    rotateGroupLeftTween;
+
+  $: selectedHtmlPanel = ["more", "about", "web"][swipePosition + 1];
 
   function handleBoxTouchStart(event) {
     if (event.touches.length === 1) {
@@ -45,16 +56,28 @@
     if (event.touches.length === 1) {
       mouseX = event.touches[0].pageX - halfContainerWidth;
 
-      if (mouseX - mouseXOnMouseDown > 100) {
-        new TWEEN.Tween(group.rotation)
-          .to({ y: group.rotation.y + Math.PI / 2 }, 400)
-          .easing(TWEEN.Easing.Cubic.In)
-          .start();
-      } else if (mouseX - mouseXOnMouseDown < -100) {
-        new TWEEN.Tween(group.rotation)
-          .to({ y: group.rotation.y - Math.PI / 2 }, 400)
-          .easing(TWEEN.Easing.Cubic.In)
-          .start();
+      if (mouseX - mouseXOnMouseDown > 100 && group.rotation.y < 1.5) {
+        if (!rotateGroupRightTween) {
+          rotateGroupRightTween = new TWEEN.Tween(group.rotation)
+            .to({ y: group.rotation.y + Math.PI / 2 }, 400)
+            .easing(TWEEN.Easing.Cubic.In)
+            .onComplete(() => {
+              swipePosition += 1;
+              rotateGroupRightTween = null;
+            })
+            .start();
+        }
+      } else if (mouseX - mouseXOnMouseDown < -100 && group.rotation.y > -1.5) {
+        if (!rotateGroupLeftTween) {
+          rotateGroupLeftTween = new TWEEN.Tween(group.rotation)
+            .onComplete(() => {
+              swipePosition -= 1;
+              rotateGroupLeftTween = null;
+            })
+            .to({ y: group.rotation.y - Math.PI / 2 }, 400)
+            .easing(TWEEN.Easing.Cubic.In)
+            .start();
+        }
       }
     }
   }
@@ -88,10 +111,6 @@
     light.position.set(0, 50, 30);
     scene.add(light);
 
-    const light2 = new THREE.DirectionalLight(0xffffff, 0.3);
-    light2.position.set(0, 5, 60);
-    scene.add(light2);
-
     group = new THREE.Group();
     scene.add(group);
 
@@ -109,6 +128,47 @@
     );
     group.add(line);
 
+    iconGeometry = new THREE.PlaneGeometry(0.3, 0.3, 10, 10);
+
+    // icon planes
+    aboutImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: aboutTexture,
+        transparent: true,
+        opacity: ICON_BASE_OPACITY
+      })
+    );
+
+    aboutImagePlane.position.set(0, 0, 0.255);
+    group.add(aboutImagePlane);
+
+    webImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: webTexture,
+        transparent: true,
+        opacity: ICON_BASE_OPACITY
+      })
+    );
+
+    webImagePlane.position.set(-0.3, 0, 0);
+    webImagePlane.rotation.y = THREE.Math.degToRad(-90);
+    group.add(webImagePlane);
+
+    moreImagePlane = new THREE.Mesh(
+      iconGeometry,
+      new THREE.MeshBasicMaterial({
+        map: moreTexture,
+        transparent: true,
+        opacity: ICON_BASE_OPACITY
+      })
+    );
+
+    moreImagePlane.position.set(0.3, 0, 0);
+    moreImagePlane.rotation.y = THREE.Math.degToRad(90);
+    group.add(moreImagePlane);
+
     renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true
@@ -119,8 +179,6 @@
     threeContainer.appendChild(renderer.domElement);
   }
 
-  function update(time) {}
-
   function render() {
     renderer.render(scene, camera);
   }
@@ -129,7 +187,6 @@
     time *= 0.0004;
     TWEEN.update();
     requestAnimationFrame(animate);
-    update(time);
     render();
   }
 </script>
@@ -141,7 +198,7 @@
 
   .container {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -150,17 +207,24 @@
   .three-container {
     flex: 1;
     width: 100%;
+    height: 100%;
+  }
+
+  .panel-container {
+    flex: 3;
+    margin: 2vw 2vw 0 2vw;
+    border: 3px solid black;
+    border-radius: 5px;
+    width: 95%;
+    height: 70%;
+    background-color: #af0000;
   }
 
   .text-container {
-    flex: 1;
-    border: 3px solid black;
-    border-radius: 5px;
-    width: 98%;
     font-family: "Jaldi", Helvetica, sans-serif;
-    font-size: 10vw;
-    background-color: #af0000;
+    font-size: 6.5vw;
     color: #ffffee;
+    padding: 1vw;
   }
 </style>
 
@@ -168,8 +232,57 @@
   <link href="https://fonts.googleapis.com/css?family=Jaldi" rel="stylesheet" />
 </svelte:head>
 <div class="container">
-  <div class="text-container">
-    <p>SOME TEXT</p>
+  <div class="panel-container">
+    {#if selectedHtmlPanel === 'about'}
+      <div class="text-container">
+        <p>
+          <strong>Hello</strong>
+        </p>
+        <p>My name is Paul and I am a software engineer based in London</p>
+        <p>
+          I do a lot of frontend with React, Vue and Svelte (this site is
+          written using Svelte!)
+        </p>
+        <p>
+          But I do the occasional bit of backend as well and I'm always keen to
+          learn more.
+        </p>
+      </div>
+    {/if}
+    {#if selectedHtmlPanel === 'web'}
+      <div class="text-container">
+        <p>
+          <strong>Stuff I'm working on...</strong>
+        </p>
+        <p>This is something I built to help me learn French:</p>
+        <Link to="verb-whale">Verb Whale</Link>
+        <p>Other things will go here when they're finished...</p>
+      </div>
+    {/if}
+    {#if selectedHtmlPanel === 'more'}
+      <div class="text-container">
+        <span>
+          <p style="margin-bottom: 0;">
+            <strong>What else...</strong>
+          </p>
+          <p style="margin-top: 2vw;">
+            Before I became a developer I was a sound guy for TV and film, and a
+            sound designer for theatre.
+          </p>
+          <p>
+            Checkout my
+            <a href="https://github.com/paulmillen/cv-small">CV</a>
+            on Github if you're interested.
+          </p>
+          <div class="divider" />
+          <p>I enjoy distance running and film and digital photography.</p>
+          <p>
+            Let me bore you with some
+            <a href="https://www.flickr.com/photos/nmtm">photos...</a>
+          </p>
+        </span>
+      </div>
+    {/if}
   </div>
   <div class="three-container" id="three" />
 </div>
