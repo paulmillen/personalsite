@@ -260,9 +260,8 @@
     border: 3px solid black;
     border-radius: 5px;
     width: 95%;
-    height: 70%;
-    min-height: 60vh;
-    max-height: 60vh;
+    min-height: 53vh;
+    max-height: 53vh;
     background-color: #af0000;
   }
 
