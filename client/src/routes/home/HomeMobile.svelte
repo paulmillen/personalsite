@@ -259,7 +259,7 @@
     {#if selectedHtmlPanel === 'about'}
       <div
         class="text-container"
-        transition:fade={{ duration: TEXT_PANEL_TRANSITION }}>
+        transition:fade={{ delay: 10, duration: TEXT_PANEL_TRANSITION }}>
         <p>
           <strong>Hello</strong>
         </p>
@@ -274,7 +274,7 @@
     {#if selectedHtmlPanel === 'web'}
       <div
         class="text-container"
-        transition:fade={{ duration: TEXT_PANEL_TRANSITION }}>
+        transition:fade={{ delay: 10, duration: TEXT_PANEL_TRANSITION }}>
         <p>
           <strong>Stuff I'm working on...</strong>
         </p>
@@ -286,7 +286,7 @@
     {#if selectedHtmlPanel === 'more'}
       <div
         class="text-container"
-        transition:fade={{ duration: TEXT_PANEL_TRANSITION }}>
+        transition:fade={{ delay: 10, duration: TEXT_PANEL_TRANSITION }}>
         <span>
           <p style="margin-bottom: 0;">
             <strong>What else...</strong>
