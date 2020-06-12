@@ -222,6 +222,7 @@
   .container {
     width: 100%;
     height: 100vh;
+    max-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -233,6 +234,26 @@
     height: 100%;
   }
 
+  .title-container {
+    flex: 1;
+    font-family: "Jaldi", Helvetica, sans-serif;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    line-height: 5vh;
+    margin: auto;
+  }
+
+  .header {
+    font-size: 10vw;
+  }
+
+  .sub-header {
+    font-size: 5.5vw;
+    opacity: 0.6;
+    margin-left: 0.5vw;
+  }
+
   .panel-container {
     flex: 3;
     margin: 2vw 2vw 0 2vw;
@@ -240,6 +261,8 @@
     border-radius: 5px;
     width: 95%;
     height: 70%;
+    min-height: 60vh;
+    max-height: 60vh;
     background-color: #af0000;
   }
 
@@ -255,6 +278,10 @@
   <link href="https://fonts.googleapis.com/css?family=Jaldi" rel="stylesheet" />
 </svelte:head>
 <div class="container">
+  <div class="title-container">
+    <span class="header">PAUL MILLEN</span>
+    <span class="sub-header">front-end developer</span>
+  </div>
   <div class="panel-container">
     {#if selectedHtmlPanel === 'about'}
       <div
@@ -263,12 +290,14 @@
         <p>
           <strong>Hello</strong>
         </p>
-        <p>My name is Paul and I am a software engineer based in London.</p>
-        <p>I do a lot of front-end with React, Vue and Svelte.</p>
         <p>
-          But I do the occasional bit of back-end as well and I'm always keen to
-          learn more.
+          Front-end / JS developer with the usual tech - React, Vue (and
+          Svelte).
         </p>
+        <p>
+          Also enjoy the occasional bit of back-end. Always keen to learn more.
+        </p>
+        <p>Based in London.</p>
       </div>
     {/if}
     {#if selectedHtmlPanel === 'web'}
@@ -287,26 +316,27 @@
       <div
         class="text-container"
         transition:fade={{ delay: 10, duration: TEXT_PANEL_TRANSITION }}>
-        <span>
-          <p style="margin-bottom: 0;">
-            <strong>What else...</strong>
-          </p>
-          <p style="margin-top: 2vw;">
-            Before I became a developer I was a sound guy for TV and film, and a
-            sound designer for theatre.
-          </p>
-          <p>
-            Checkout my
-            <a href="https://github.com/paulmillen/cv-small">CV</a>
-            on Github if you're interested.
-          </p>
-          <div class="divider" />
-          <p>I enjoy distance running and film and digital photography.</p>
-          <p>
-            Let me bore you with some
-            <a href="https://www.flickr.com/photos/nmtm">photos...</a>
-          </p>
-        </span>
+        <p style="margin-bottom: 0;">
+          <strong>What else...</strong>
+        </p>
+        <p style="margin-top: 2vw; font-size: 5.5vw;">
+          Once a theatre sound designer and production sound recordist for film
+          and TV.
+        </p>
+        <p style="font-size: 5.5vw;">
+          Github based
+          <a href="https://github.com/paulmillen/cv-small">CV</a>
+          for more.
+        </p>
+        <div class="divider" />
+        <p style="font-size: 5.5vw;">
+          I enjoy distance running and film and digital photography.
+        </p>
+        <p style="font-size: 5.5vw;">
+          May I bore you with some
+          <a href="https://www.flickr.com/photos/nmtm">photos</a>
+          ?
+        </p>
       </div>
     {/if}
   </div>

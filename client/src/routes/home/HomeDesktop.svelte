@@ -1,5 +1,6 @@
 <script>
   import { onMount, onDestroy } from "svelte";
+  import { fade } from "svelte/transition";
   import { Link } from "svelte-routing";
   import * as THREE from "three";
   import TWEEN from "@tweenjs/tween.js";
@@ -22,6 +23,7 @@
   });
 
   let visiblePanel = null;
+  let hideHeader = false;
 
   const mouse = new THREE.Vector2();
   const ICON_BASE_OPACITY = 0.7;
@@ -158,6 +160,7 @@
 
   function resetSphere(sphereObject) {
     hideAllTextElements();
+    hideHeader = false;
     sphereObject.material.color.setHex(0xffffff);
     onHoverRaycastObjects = [...DEFAULT_ON_HOVER_RAYCAST_OBJECTS];
 
@@ -235,6 +238,9 @@
 
               geometryChangeTween = new TWEEN.Tween(selectedSphere.scale)
                 .to({ y: window.innerHeight }, 600)
+                .onStart(() => {
+                  hideHeader = true;
+                })
                 .easing(TWEEN.Easing.Quartic.In)
                 .onComplete(() => {
                   showSelectedTextElement(selectedSphere.name);
@@ -303,7 +309,6 @@
 
     // scene
     scene = new THREE.Scene();
-    scene.background = new THREE.Color("white");
 
     // light
     const light = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -446,6 +451,7 @@
     });
 
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setClearColor(0xffffff, 0);
     renderer.setSize(initialDimensions.width, initialDimensions.height);
     threeContainer.appendChild(renderer.domElement);
 
@@ -497,6 +503,26 @@
     height: 100vh;
   }
 
+  .title-container {
+    font-family: "Jaldi", Helvetica, sans-serif;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    left: 28%;
+    top: 20vh;
+    line-height: 550%;
+  }
+
+  .header {
+    font-size: 5vw;
+  }
+
+  .sub-header {
+    font-size: 2.5vw;
+    opacity: 0.6;
+    margin-left: 0.5vw;
+  }
+
   .text-container {
     position: absolute;
     top: calc(50vh - 20vw);
@@ -521,8 +547,8 @@
 
   .divider {
     width: 5vw;
-    border: 2px solid #ffffee;
-    margin: 4vh auto;
+    border: 1px solid #ffffee;
+    margin: 15% auto;
   }
 </style>
 
@@ -530,18 +556,26 @@
   <link href="https://fonts.googleapis.com/css?family=Jaldi" rel="stylesheet" />
 </svelte:head>
 <div class="three-container" id="three">
+  {#if !hideHeader}
+    <div transition:fade={{ duration: 100 }} class="title-container">
+      <span class="header">PAUL MILLEN</span>
+      <span class="sub-header">front-end developer</span>
+    </div>
+  {/if}
   <div class="overlay">
     {#if visiblePanel === 'about'}
       <div class="text-container about-text-container">
         <p>
           <strong>Hello</strong>
         </p>
-        <p>My name is Paul and I am a software engineer based in London.</p>
-        <p>I do a lot of front-end with React, Vue and Svelte.</p>
         <p>
-          But I do the occasional bit of back-end as well and I'm always keen to
-          learn more.
+          Front-end / JS developer with the usual tech - React, Vue (and
+          Svelte).
         </p>
+        <p>
+          Also enjoy the occasional bit of back-end. Always keen to learn more.
+        </p>
+        <p>Based in London.</p>
       </div>
     {/if}
     {#if visiblePanel === 'web'}
@@ -565,21 +599,22 @@
             <strong>What else...</strong>
           </p>
           <p style="font-size: 1.2vw;">
-            Before I became a developer I was a sound guy for TV and film, and a
-            sound designer for theatre.
+            Once a theatre sound designer and production sound recordist for
+            film and TV.
           </p>
           <p style="font-size: 1.2vw;">
-            Checkout my
+            Github based
             <a href="https://github.com/paulmillen/cv-small">CV</a>
-            on Github if you're interested.
+            for more.
           </p>
           <div class="divider" />
           <p style="font-size: 1.2vw;">
             I enjoy distance running and film and digital photography.
           </p>
           <p style="font-size: 1.2vw;">
-            Let me bore you with some
-            <a href="https://www.flickr.com/photos/nmtm">photos...</a>
+            May I bore you with some
+            <a href="https://www.flickr.com/photos/nmtm">photos</a>
+            ?
           </p>
         </span>
       </div>
