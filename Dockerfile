@@ -24,4 +24,4 @@ WORKDIR /
 
 ENTRYPOINT ["./gunicorn_starter.sh"]
 
-EXPOSE 8000
+EXPOSE 80
